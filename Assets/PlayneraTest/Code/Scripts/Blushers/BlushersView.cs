@@ -21,6 +21,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
         public void Construct(IBlushersViewModel viewModel)
         {
             _viewModel = viewModel;
+            _viewModel.Init(brush);
         }
 
         private void Start()
@@ -48,6 +49,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         private void StartMakeup(GameObject obj)
         {
+            transform.SetAsLastSibling();
             _viewModel.StartMakeUp(obj);
         }
     }

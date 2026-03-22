@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PlayneraTest.Code.Scripts.Hand
 {
@@ -11,18 +12,30 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnMakeupPosition;
 
         public float MoveTime;
+        [SerializeField] private Image _handImage;
         [SerializeField] private List<GameObject> _hands;
-        [SerializeField] private Transform _targetPoint;
         
-        
-        public async UniTaskVoid MoveAsync(Vector3 position)
+        public async UniTask MoveAsync(Transform target)
         {
+            transform.SetParent(target.parent);
+            target.SetAsLastSibling();
+            
             UniTaskCompletionSource tcs = new UniTaskCompletionSource();
             Sequence seq = DOTween.Sequence();
             
             seq
-                .Append(transform.DOMove(position, MoveTime))
-                .OnComplete(() => tcs.TrySetResult());
+                .Append(transform.DOMove(target.position, MoveTime))
+                .InsertCallback(MoveTime/3, () =>
+                {
+                    _hands[0].gameObject.SetActive(false);
+                    _hands[1].gameObject.SetActive(true);
+                })
+                .OnComplete(() =>
+                {
+                    _hands[1].gameObject.SetActive(false);
+                    _hands[2].gameObject.SetActive(true);
+                    tcs.TrySetResult();
+                }).SetEase(Ease.InSine);
             
             await tcs.Task;
         }
