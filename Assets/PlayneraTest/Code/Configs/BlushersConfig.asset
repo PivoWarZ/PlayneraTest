@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93500402f3334709b39416824db5d835, type: 3}
+  m_Name: BlushersConfig
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Configs.BlushersConfig
+  _blushes:
+  - BlushColor: {r: 1, g: 0.69803923, b: 0.8117648, a: 0}
+    FaceBrushLeft: {fileID: 1836553362, guid: 9cc768f900aa0a24cbfc912db1fd6b9a, type: 3}
+    FaceBrushRight: {fileID: -38478237, guid: 9cc768f900aa0a24cbfc912db1fd6b9a, type: 3}
+    BorderColor: {r: 0.59607846, g: 0.2901961, b: 0.43529415, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  - BlushColor: {r: 0.95294124, g: 0.5294118, b: 0.6392157, a: 0}
+    FaceBrushLeft: {fileID: 1339858068, guid: f83ffb8369899f6478c05fefcb4719b6, type: 3}
+    FaceBrushRight: {fileID: -106538655, guid: f83ffb8369899f6478c05fefcb4719b6, type: 3}
+    BorderColor: {r: 0.59607846, g: 0.2901961, b: 0.43529415, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  - BlushColor: {r: 1, g: 0.7607844, b: 0.69803923, a: 0}
+    FaceBrushLeft: {fileID: -1977196491, guid: 702f77c14725c154a98a81ad8f57960c, type: 3}
+    FaceBrushRight: {fileID: 2031068482, guid: 702f77c14725c154a98a81ad8f57960c, type: 3}
+    BorderColor: {r: 0.87843144, g: 0.6313726, b: 0.46274513, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  - BlushColor: {r: 0, g: 0, b: 0, a: 0}
+    FaceBrushLeft: {fileID: 941927648, guid: a16bb1767c503594c9383b390e795db8, type: 3}
+    FaceBrushRight: {fileID: 1698871710, guid: a16bb1767c503594c9383b390e795db8, type: 3}
+    BorderColor: {r: 1, g: 0.5882353, b: 0.5882353, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  - BlushColor: {r: 0, g: 0, b: 0, a: 0}
+    FaceBrushLeft: {fileID: -815835007, guid: e3b6af8ab9e79134f9196fb69a9a97dd, type: 3}
+    FaceBrushRight: {fileID: -104636885, guid: e3b6af8ab9e79134f9196fb69a9a97dd, type: 3}
+    BorderColor: {r: 0.9490197, g: 0.6901961, b: 0.89019614, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  - BlushColor: {r: 0, g: 0, b: 0, a: 0}
+    FaceBrushLeft: {fileID: -1428075663, guid: a80f69469fdd3684189286b23d6086fc, type: 3}
+    FaceBrushRight: {fileID: 1883229757, guid: a80f69469fdd3684189286b23d6086fc, type: 3}
+    BorderColor: {r: 0.98823535, g: 0.53333336, b: 0.4431373, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  - BlushColor: {r: 0, g: 0, b: 0, a: 0}
+    FaceBrushLeft: {fileID: -17995180, guid: e470127051b2fb045b4cb23459f07944, type: 3}
+    FaceBrushRight: {fileID: 227503602, guid: e470127051b2fb045b4cb23459f07944, type: 3}
+    BorderColor: {r: 0.9803922, g: 0.69803923, b: 0.5254902, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  - BlushColor: {r: 0, g: 0, b: 0, a: 0}
+    FaceBrushLeft: {fileID: 1850518983, guid: b6bc57ac141eb6846acb228c565b7c4e, type: 3}
+    FaceBrushRight: {fileID: -1150523392, guid: b6bc57ac141eb6846acb228c565b7c4e, type: 3}
+    BorderColor: {r: 0.59607846, g: 0.2901961, b: 0.43529415, a: 1}
+    ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
+  BorderColor: {r: 0.59607846, g: 0.2901961, b: 0.43529415, a: 1}
+  ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.24705882, a: 0.2}
