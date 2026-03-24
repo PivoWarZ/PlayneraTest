@@ -2,7 +2,7 @@
 
 namespace PlayneraTest.Code.Scripts.Interfaces
 {
-    public interface IMakeUp
+    public interface IMakeUpViewModel
     {
         void StartMakeUp(GameObject obj);
         void BreakMakeUp();

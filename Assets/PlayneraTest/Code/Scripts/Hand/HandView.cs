@@ -12,6 +12,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnMakeupPosition;
 
         public float MoveTime;
+        public Vector3 Offset;
         [SerializeField] private Image _handImage;
         [SerializeField] private List<GameObject> _hands;
         
@@ -27,17 +28,27 @@ namespace PlayneraTest.Code.Scripts.Hand
                 .Append(transform.DOMove(target.position, MoveTime))
                 .InsertCallback(MoveTime/3, () =>
                 {
-                    _hands[0].gameObject.SetActive(false);
-                    _hands[1].gameObject.SetActive(true);
+                    HideWrist(_hands[0].gameObject);
+                    ShowWrist(_hands[1].gameObject);
                 })
                 .OnComplete(() =>
                 {
-                    _hands[1].gameObject.SetActive(false);
-                    _hands[2].gameObject.SetActive(true);
+                    HideWrist(_hands[1].gameObject);
+                    ShowWrist(_hands[2].gameObject);
                     tcs.TrySetResult();
                 }).SetEase(Ease.InSine);
             
             await tcs.Task;
+        }
+
+        private void ShowWrist(GameObject obj)
+        {
+            obj.SetActive(true);
+        }
+
+        private void HideWrist(GameObject obj)
+        {
+            obj.SetActive(false);
         }
 
     }
