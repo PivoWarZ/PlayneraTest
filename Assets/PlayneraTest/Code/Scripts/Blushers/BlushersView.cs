@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using PlayneraTest.Code.Configs;
 using PlayneraTest.Code.Scripts.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;

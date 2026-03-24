@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using PlayneraTest.Code.Scripts.Blushers;
+﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace PlayneraTest.Code.Configs
+namespace PlayneraTest.Code.Scripts.Blushers
 {
     [CreateAssetMenu(fileName = "BlushersConfig", menuName = "Configs/BlushersConfig/New BlushersConfig")]
     public class BlushersConfig: ScriptableObject
