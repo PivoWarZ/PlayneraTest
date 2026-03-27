@@ -5,6 +5,7 @@ using DG.Tweening;
 using PlayneraTest.Code.Scripts.Hand;
 using PlayneraTest.Code.Scripts.Interfaces;
 using PlayneraTest.Code.Scripts.MakeupGirl;
+using TMPro;
 using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Blushers
@@ -37,6 +38,12 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
             float handStartMoveTime = _hand.MoveTime;
+            float scale = 1.15f;
+            float scaleDuration = 0.2f;
+            Vector3 rotateDirection = new Vector3(0, 0, -90);
+            float rotateDuration = 0.3f;
+            int yoyoCount = 6;
+            float yoyoSpeed = _hand.MoveTime / 12;
             
             await _hand.MoveAsync(brushHandle, token);
             
@@ -48,8 +55,8 @@ namespace PlayneraTest.Code.Scripts.Blushers
             Sequence sequence = DOTween.Sequence();
             
             sequence
-                .Append(brushHandle.transform.DOScale(1.1f, 0.2f))
-                .Append(brushHandle.transform.DORotate(new Vector3(0, 0, -90), 0.3f))
+                .Append(brushHandle.transform.DOScale(scale, scaleDuration))
+                .Append(brushHandle.transform.DORotate(rotateDirection, rotateDuration))
                 .OnComplete(() => task.TrySetResult());
 
             using var registration = token.Register(() =>
@@ -66,10 +73,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
             await _hand.MoveAsync(blush, token);
             
             var yoyoPoints = blush.GetComponent<IYoyoMakeup>().YoyoPoints;
-            int yoyoCont = 6;
-            _hand.MoveTime /= yoyoCont*2;
+            _hand.MoveTime = yoyoSpeed;
             
-            await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCont, token);
+            await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCount, token);
             
             _hand.MoveTime = handStartMoveTime;
             
