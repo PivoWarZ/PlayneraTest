@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using PlayneraTest.Code.Scripts.Hand;
 using PlayneraTest.Code.Scripts.Interfaces;
+using PlayneraTest.Code.Scripts.MakeupGirl;
 using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Blushers
@@ -35,16 +36,19 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brushHandle = _makeup.BrushHandle;
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
+            float handStartMoveTime = _hand.MoveTime;
             
             await _hand.MoveAsync(brushHandle, token);
             
             brushHandle.SetParent(_hand.transform);
+            brushHandle.SetAsLastSibling();
             
             UniTaskCompletionSource task = new UniTaskCompletionSource();
             
             Sequence sequence = DOTween.Sequence();
             
             sequence
+                .Append(brushHandle.transform.DOScale(1.1f, 0.2f))
                 .Append(brushHandle.transform.DORotate(new Vector3(0, 0, -90), 0.3f))
                 .OnComplete(() => task.TrySetResult());
 
@@ -60,6 +64,16 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _hand.transform.SetAsLastSibling();
             
             await _hand.MoveAsync(blush, token);
+            
+            var yoyoPoints = blush.GetComponent<IYoyoMakeup>().YoyoPoints;
+            int yoyoCont = 6;
+            _hand.MoveTime /= yoyoCont*2;
+            
+            await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCont, token);
+            
+            _hand.MoveTime = handStartMoveTime;
+            
+            await _hand.MoveAsync(Girl.BottomMakeupPosition, token);
         }
         
         void IMakeUpViewModel.BreakMakeUp()

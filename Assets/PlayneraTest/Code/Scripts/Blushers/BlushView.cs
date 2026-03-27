@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DTT.UI.ProceduralUI;
 using PlayneraTest.Code.Scripts.Interfaces;
 using UnityEngine;
@@ -6,18 +7,29 @@ using UnityEngine.UI;
 
 namespace PlayneraTest.Code.Scripts.Blushers
 {
-    public class BlushView : MonoBehaviour, IMakeupRequester
+    public class BlushView : MonoBehaviour, IMakeupRequester, IYoyoMakeup
     {
         public event Action<GameObject> OnMakeupRequest;
         [SerializeField] private Image _brush;
         [SerializeField] private RoundedImage _border;
         [SerializeField] private Button _makeupButton;
+        [SerializeField] private List<RectTransform> _yoyoPoints;
         private Sprite _faceBrushLeft;
         private Sprite _faceBrushRight;
 
         public Sprite FaceBrushLeft => _faceBrushLeft;
 
         public Sprite FaceBrushRight => _faceBrushRight;
+
+        public List<Vector3> YoyoPoints
+        {
+            get
+            {
+                List<Vector3> yoyoPoints = new List<Vector3>();
+                _yoyoPoints.ForEach(p => yoyoPoints.Add(p.transform.position));
+                return yoyoPoints;
+            }
+        }
 
         private void Awake()
         {

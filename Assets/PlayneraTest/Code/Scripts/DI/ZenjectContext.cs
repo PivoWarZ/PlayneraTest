@@ -9,7 +9,6 @@ namespace PlayneraTest.Code.Scripts.DI
     {
         public override void InstallBindings()
         {
-            Debug.Log(GetType().Name);
             HandService handService = new HandService();
             Container.Bind<IHandService>().FromInstance(handService);
             

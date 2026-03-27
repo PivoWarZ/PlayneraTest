@@ -39,9 +39,6 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public async UniTask MoveAsync(RectTransform target, CancellationToken token)
         {
-            transform.SetParent(target.parent);
-            target.SetAsLastSibling();
-            
             UniTaskCompletionSource task = new UniTaskCompletionSource();
             _moveSequence = DOTween.Sequence();
             
@@ -55,7 +52,7 @@ namespace PlayneraTest.Code.Scripts.Hand
             {
                 _moveSequence
                     .Append(Move(target.position))
-                    .InsertCallback(MoveTime/_hands.Count, () =>
+                    .InsertCallback(MoveTime/1.15f, () =>
                     {
                         HideWrist(_hands[0].gameObject);
                         ShowWrist(_hands[1].gameObject);
