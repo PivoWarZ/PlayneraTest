@@ -9,7 +9,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
 {
     public class BlushersView: MonoBehaviour
     {
-        [SerializeField] private List<BlushView> blushs;
+        [SerializeField] private List<BlushView> _blushs;
         [SerializeField] private RectTransform _brushHandle;
         [SerializeField] private RectTransform _brush;
         [SerializeField] private Image _brushShadow;
@@ -27,9 +27,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
         {
             BlushersConfig config = Resources.Load<Configs>("ConfigsProvider").GetConfig<BlushersConfig>();
             
-            for (int i=0; i < blushs.Count; i++)
+            for (int i=0; i < _blushs.Count; i++)
             {
-                var blush = blushs[i];
+                var blush = _blushs[i];
                 blush.SetBlush(config.Blushes[i]);
                 blush.OnMakeupRequest += StartMakeup;
             }
@@ -39,9 +39,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         private void OnDestroy()
         {
-            for (int i=1; i < blushs.Count; i++)
+            for (int i=1; i < _blushs.Count; i++)
             {
-                var blush = blushs[i];
+                var blush = _blushs[i];
                 blush.OnMakeupRequest -= StartMakeup;
             }
         }
@@ -53,11 +53,12 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _viewModel.StartMakeUp();
         }
 
-        private BlushMakeupTargets MakeupTargets(GameObject obj)
+        private BlushMakeupTargets MakeupTargets(GameObject blush)
         {
             BlushMakeupTargets targets = new BlushMakeupTargets {
                 BrushHandle = _brushHandle,
                 Brush = _brush,
+                Blush = blush.GetComponent<RectTransform>()
             };
             
             return targets;

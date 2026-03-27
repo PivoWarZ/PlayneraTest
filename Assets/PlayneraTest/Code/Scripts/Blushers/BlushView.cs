@@ -9,9 +9,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
     public class BlushView : MonoBehaviour, IMakeupRequester
     {
         public event Action<GameObject> OnMakeupRequest;
-        [SerializeField] private Image Brush;
-        [SerializeField] private RoundedImage Border;
-        [SerializeField] private Button MakeupButton;
+        [SerializeField] private Image _brush;
+        [SerializeField] private RoundedImage _border;
+        [SerializeField] private Button _makeupButton;
         private Sprite _faceBrushLeft;
         private Sprite _faceBrushRight;
 
@@ -21,12 +21,12 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         private void Awake()
         {
-            MakeupButton.onClick.AddListener(MakeupRequest);
+            _makeupButton.onClick.AddListener(MakeupRequest);
         }
 
         private void OnDestroy()
         {
-            MakeupButton.onClick.RemoveAllListeners();
+            _makeupButton.onClick.RemoveAllListeners();
         }
 
         private void MakeupRequest()
@@ -36,8 +36,8 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         public void SetBlush(Blush blush)
         {
-            Brush.color = blush.BlushColor;
-            Border.color = blush.BorderColor;
+            _brush.color = blush.BlushColor;
+            _border.color = blush.BorderColor;
             _faceBrushLeft = blush.FaceBrushLeft;
             _faceBrushRight = blush.FaceBrushRight;
         }

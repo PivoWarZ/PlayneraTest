@@ -124,7 +124,7 @@ namespace PlayneraTest.Code.Scripts.Hand
 
             _moveSequence
                 .AppendCallback(MoveStarted)
-                .Append(transform.DOMove(target + Offset, MoveTime))
+                .Append(transform.DOMove(target - Offset, MoveTime))
                 .OnComplete(MovingCompleted);
 
             return _moveSequence;

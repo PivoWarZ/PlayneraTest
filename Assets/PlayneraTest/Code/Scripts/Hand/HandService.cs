@@ -2,7 +2,7 @@
 
 namespace PlayneraTest.Code.Scripts.Hand
 {
-    public class HandService
+    public class HandService: IHandService
     {
         public event Action OnServiceInitialized;
         

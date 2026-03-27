@@ -6,5 +6,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
     {
         public RectTransform BrushHandle;
         public RectTransform Brush;
+        public RectTransform Blush;
     }
 }

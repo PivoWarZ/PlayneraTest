@@ -8,13 +8,14 @@ using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Blushers
 {
-    public class BlushersViewModel: IBlushersViewModel, IDisposable
+    public class BlushersViewModel: IBlushersViewModel, IDisposable, INeedHandService
     {
         private BlushMakeupTargets _makeup = new BlushMakeupTargets();
         private HandView _hand;
         private bool _isMakeupProcessing;
         private CancellationTokenSource _cancell = new CancellationTokenSource();
-        
+        private IHandService _handService;
+
         void IBlushersViewModel.SetMakeupTarget(BlushMakeupTargets targets)
         {
             _makeup = targets;
@@ -25,7 +26,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _isMakeupProcessing = true;
             
             var handPrefab = Resources.Load<HandView>("Hand");
-            _hand = GameObject.Instantiate(handPrefab, _makeup.BrushHandle.transform);
+            _hand = _handService.GetHand();
             RunMakeupRequest(_cancell.Token).Forget();
         }
 
@@ -33,6 +34,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
         {
             var brushHandle = _makeup.BrushHandle;
             var brush = _makeup.Brush;
+            var blush = _makeup.Blush;
             
             await _hand.MoveAsync(brushHandle, token);
             
@@ -54,20 +56,10 @@ namespace PlayneraTest.Code.Scripts.Blushers
             
             await task.Task;
             
-            /*
-            _hand.Offset = brush.position - _hand.transform.position;
+            _hand.Offset = brush.transform.position - _hand.transform.position;
+            _hand.transform.SetAsLastSibling();
             
-            await _hand.MoveAsync(_makeup.BlushTransform.gameObject.GetComponent<RectTransform>());
-
-            var rect = _makeup.BlushTransform.GetComponent<RectTransform>().rect;
-            
-            Vector3 localLeft = new Vector3(rect.xMin, rect.yMin + rect.height / 2, 0);
-            Vector3 localRight = new Vector3(rect.xMax, rect.yMin + rect.height / 2, 0);
-            
-            
-            
-            
-            await _hand.MoveAsync(Girl.BottomMakeupPosition);*/
+            await _hand.MoveAsync(blush, token);
         }
         
         void IMakeUpViewModel.BreakMakeUp()
@@ -78,6 +70,11 @@ namespace PlayneraTest.Code.Scripts.Blushers
         void IDisposable.Dispose()
         {
             _cancell.Cancel();
+        }
+
+        void INeedHandService.Initialize(IHandService handService)
+        {
+            _handService = handService;
         }
     }
 }
