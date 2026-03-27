@@ -1,4 +1,5 @@
 ﻿using PlayneraTest.Code.Scripts.Blushers;
+using PlayneraTest.Code.Scripts.Hand;
 using Zenject;
 
 namespace PlayneraTest.Code.Scripts.DI
@@ -9,6 +10,8 @@ namespace PlayneraTest.Code.Scripts.DI
         {
             Container.BindInterfacesAndSelfTo<BlushersViewModel>()
                 .AsCached();
+            
+            Container.BindInterfacesAndSelfTo<HandService>().AsCached();
         }
     }
 }

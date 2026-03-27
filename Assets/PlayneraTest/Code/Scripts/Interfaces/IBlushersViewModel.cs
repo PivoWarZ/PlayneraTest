@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using PlayneraTest.Code.Scripts.Blushers;
+using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Interfaces
 {
     public interface IBlushersViewModel: IMakeUpViewModel
     {
-        void Init(Transform brush);
+        void SetMakeupTarget(BlushMakeupTargets targets);
     }
 }

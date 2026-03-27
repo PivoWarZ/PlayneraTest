@@ -2869,10 +2869,45 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6586817777265229942}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.45155767, y: 0.5114187}
-  m_AnchorMax: {x: 0.5352212, y: 0.55300003}
-  m_AnchoredPosition: {x: -0.5, y: 4}
-  m_SizeDelta: {x: -7, y: 0}
+  m_AnchorMin: {x: 0.5656728, y: 0.5134187}
+  m_AnchorMax: {x: 0.64366364, y: 0.55300003}
+  m_AnchoredPosition: {x: -0.6000061, y: 3.1999512}
+  m_SizeDelta: {x: 0, y: 5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1970596172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1970596173}
+  m_Layer: 5
+  m_Name: Brush
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1970596173
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970596172}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 275013970800745407}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -159, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2064052354
 GameObject:
@@ -3033,7 +3068,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1970596173}
   m_Father: {fileID: 6091364407629034997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.34634575, y: 0.24215984}
@@ -3594,7 +3630,7 @@ GameObject:
   - component: {fileID: 9020377639730984187}
   - component: {fileID: 4503671579909047231}
   m_Layer: 5
-  m_Name: Brush
+  m_Name: BrushHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5673,7 +5709,8 @@ MonoBehaviour:
   - {fileID: 4698034224535925725}
   - {fileID: 7700599881174172724}
   - {fileID: 6467060250428871041}
-  brush: {fileID: 275013970800745407}
+  _brushHandle: {fileID: 275013970800745407}
+  _brush: {fileID: 1970596173}
   _brushShadow: {fileID: 436421812}
 --- !u!114 &8346727027255133306
 MonoBehaviour:
@@ -6025,7 +6062,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8156863}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

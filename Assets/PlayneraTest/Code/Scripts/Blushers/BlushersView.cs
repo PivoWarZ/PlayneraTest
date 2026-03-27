@@ -10,17 +10,17 @@ namespace PlayneraTest.Code.Scripts.Blushers
     public class BlushersView: MonoBehaviour
     {
         [SerializeField] private List<BlushView> blushs;
-        [SerializeField] private Transform brush;
+        [SerializeField] private RectTransform _brushHandle;
+        [SerializeField] private RectTransform _brush;
         [SerializeField] private Image _brushShadow;
         private IBlushersViewModel _viewModel;
 
-        public Transform Brush => brush;
+        public Transform BrushHandle => _brushHandle;
 
         [Inject]
         public void Construct(IBlushersViewModel viewModel)
         {
             _viewModel = viewModel;
-            _viewModel.Init(brush);
         }
 
         private void Start()
@@ -49,7 +49,18 @@ namespace PlayneraTest.Code.Scripts.Blushers
         private void StartMakeup(GameObject obj)
         {
             transform.SetAsLastSibling();
-            _viewModel.StartMakeUp(obj);
+            _viewModel.SetMakeupTarget(MakeupTargets(obj));
+            _viewModel.StartMakeUp();
+        }
+
+        private BlushMakeupTargets MakeupTargets(GameObject obj)
+        {
+            BlushMakeupTargets targets = new BlushMakeupTargets {
+                BrushHandle = _brushHandle,
+                Brush = _brush,
+            };
+            
+            return targets;
         }
     }
 }
