@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Interfaces
@@ -17,6 +18,7 @@ namespace PlayneraTest.Code.Scripts.Interfaces
         public Vector3 Offset { get; set; }
         public void ReturnToStartPosition();
         public void Clear();
+        public Sequence Move(Vector3 target);
         UniTask MoveAsync(RectTransform target, CancellationToken token);
         UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token);
     }

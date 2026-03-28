@@ -115,7 +115,7 @@ namespace PlayneraTest.Code.Scripts.Hand
                 .OnComplete(MovingStartPositionComplete);
         }
 
-        private Sequence Move(Vector3 target)
+        public Sequence Move(Vector3 target)
         {
             _moveSequence = DOTween.Sequence();
 

@@ -63,6 +63,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             {
                 task.TrySetCanceled();
                 sequence.Kill();
+                Debug.Log($"<color=yellow>{GetType()} : Cancelled</color>");
             });
             
             await task.Task;

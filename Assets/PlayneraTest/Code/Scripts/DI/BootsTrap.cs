@@ -5,12 +5,13 @@ using Zenject;
 
 namespace PlayneraTest.Code.Scripts.DI
 {
-    public class BootsTrap: MonoBehaviour
+    public class BootsTrap: MonoInstaller
     {
         [SerializeField] private RectTransform _ui;
         private IHandService _handService;
         private INeedHandService[] _handNeeds;
-        public void Awake()
+        
+        public override void InstallBindings()
         {
             CreateHandService();
             InitializeHandServiceNeededs();
@@ -25,7 +26,7 @@ namespace PlayneraTest.Code.Scripts.DI
 
         private void CreateHandService()
         {
-            var prefabLink = Resources.Load<HandView>("Hand");
+            var prefabLink = Resources.Load<HandView>("HandNew");
             var handPrefab = GameObject.Instantiate(prefabLink, _ui);
             _handService.Initialize(handPrefab);
         }
