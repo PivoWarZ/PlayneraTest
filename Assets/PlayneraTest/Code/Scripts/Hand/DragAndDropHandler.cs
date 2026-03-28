@@ -1,6 +1,4 @@
 ﻿using System;
-using DG.Tweening;
-using PlayneraTest.Code.Scripts.Interfaces;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,8 +7,9 @@ namespace PlayneraTest.Code.Scripts.Hand
 {
     public class DragAndDropHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler
     {
+        public event Action<Vector2> OnDropped;
+        
         private RectTransform _rectTransform;
-        private Canvas _canvas;
         private Vector2 _pointerOffset;
         private Vector2 _anchorsMin;
         private Vector2 _anchorsMax;
@@ -19,7 +18,6 @@ namespace PlayneraTest.Code.Scripts.Hand
         private void Awake()
         {
             _rectTransform = GetComponent<RectTransform>();
-            _canvas = GetComponentInParent<Canvas>();
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -60,6 +58,7 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public void OnDrop(PointerEventData eventData)
         {
+            OnDropped?.Invoke(eventData.position);
             _rectTransform.anchorMin = _anchorsMin;
             _rectTransform.anchorMax = _anchorsMax;
             _rectTransform.anchoredPosition = _anchoredPosition;

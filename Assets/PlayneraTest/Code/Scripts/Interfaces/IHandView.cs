@@ -14,6 +14,7 @@ namespace PlayneraTest.Code.Scripts.Interfaces
         public event Action OnMovingComplete;
         public event Action OnYoYoStarted;
         public event Action OnYoYoEnded;
+        public event Action<Vector2> OnDropped;
         public float MoveTime { get; set; }
         public Vector3 Offset { get; set; }
         public void ReturnToStartPosition();

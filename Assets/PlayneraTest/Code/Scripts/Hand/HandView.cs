@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using PlayneraTest.Code.Scripts.Interfaces;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Sequence = DG.Tweening.Sequence;
@@ -17,10 +18,12 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnMovingComplete;
         public event Action OnYoYoStarted;
         public event Action OnYoYoEnded;
+        public event Action<Vector2> OnDropped;
         public float MoveTime { get; set; }
         public Vector3 Offset { get; set; }
         
         [SerializeField] private List<GameObject> _hands;
+        [SerializeField] private DragAndDropHandler _dragAndDropHandler;
         private RectTransform _startPosition;
         private bool _isMakeupReady;
         Sequence _moveSequence;
@@ -30,11 +33,18 @@ namespace PlayneraTest.Code.Scripts.Hand
         {
             Clear();
             _startPosition = transform.GetComponent<RectTransform>();
+            _dragAndDropHandler.OnDropped += Dropped;
         }
 
         private void OnDestroy()
         {
             _moveSequence?.Kill();
+            _dragAndDropHandler.OnDropped -= Dropped;
+        }
+        
+        private void Dropped(Vector2 droppedPosition)
+        {
+            OnDropped?.Invoke(droppedPosition);
         }
 
         public async UniTask MoveAsync(RectTransform target, CancellationToken token)

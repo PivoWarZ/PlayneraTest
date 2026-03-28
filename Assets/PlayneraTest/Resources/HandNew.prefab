@@ -387,6 +387,7 @@ MonoBehaviour:
   - {fileID: 2548357924620812061}
   - {fileID: 7835082533596293307}
   - {fileID: 8901022363628523935}
+  _dragAndDropHandler: {fileID: 3271772119316407976}
 --- !u!114 &3271772119316407976
 MonoBehaviour:
   m_ObjectHideFlags: 0

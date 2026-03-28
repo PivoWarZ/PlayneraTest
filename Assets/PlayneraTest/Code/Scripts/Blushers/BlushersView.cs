@@ -14,8 +14,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
         [SerializeField] private RectTransform _brush;
         [SerializeField] private Image _brushShadow;
         private IBlushersViewModel _viewModel;
-
-        public Transform BrushHandle => _brushHandle;
+        
 
         [Inject]
         public void Construct(IBlushersViewModel viewModel)

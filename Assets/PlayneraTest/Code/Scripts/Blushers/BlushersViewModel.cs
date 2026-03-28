@@ -26,10 +26,13 @@ namespace PlayneraTest.Code.Scripts.Blushers
         void IMakeUpViewModel.StartMakeUp()
         {
             _isMakeupProcessing = true;
-            
-            var handPrefab = Resources.Load<HandView>("Hand");
             _hand = _handService.GetHand();
             RunMakeupRequest(_cancell.Token).Forget();
+        }
+        
+        void IDisposable.Dispose()
+        {
+            _cancell.Cancel();
         }
 
         private async UniTask RunMakeupRequest(CancellationToken token)
@@ -86,11 +89,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
         void IMakeUpViewModel.BreakMakeUp()
         {
             throw new System.NotImplementedException();
-        }
-        
-        void IDisposable.Dispose()
-        {
-            _cancell.Cancel();
         }
 
         void INeedHandService.Initialize(IHandService handService)
