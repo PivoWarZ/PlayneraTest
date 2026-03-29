@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using PlayneraTest.Code.Scripts.Interfaces;
+using PlayneraTest.Code.Scripts.MakeupGirl;
 using UnityEngine;
 using Sequence = DG.Tweening.Sequence;
 
@@ -18,11 +19,11 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnYoYoEnded;
 		public event Action OnDropped;
         public float MoveTime { get; set; }
-        public Vector3 Offset { get; set; }
         public RectTransform RectTransform => _rectTransform;
         
         [SerializeField] private List<GameObject> _hands;
         [SerializeField] private DragAndDropHandler _dragAndDropHandler;
+        private Vector3 _offset;
         private RectTransform _rectTransform;
         private RectTransform _startPosition;
         private bool _isMakeupReady;
@@ -53,7 +54,7 @@ namespace PlayneraTest.Code.Scripts.Hand
             });
             
             _moveSequence
-                    .Append(Move(target.position))
+                    .Append(Move(target.transform.position))
                     .OnComplete(() => task.TrySetResult());
             
             await task.Task;
@@ -91,6 +92,11 @@ namespace PlayneraTest.Code.Scripts.Hand
             _moveSequence.Kill();
         }
 
+        public async UniTask MoveToBottomMakeupPosition(CancellationToken token)
+        {
+            await MoveAsync(Girl.BottomMakeupPosition, token);
+        }
+
         public void ReturnToStartPosition()
         {
             Clear();
@@ -100,11 +106,15 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         private Sequence Move(Vector3 target)
         {
+			var targetPosition = target - _offset;
+            Debug.Log($"targetPosition: {targetPosition} Offset: {_offset}");
+            transform.SetAsLastSibling();
+            
             _moveSequence = DOTween.Sequence();
 
             _moveSequence
                 .AppendCallback(MoveStarted)
-                .Append(transform.DOMove(target - Offset, MoveTime))
+                .Append(transform.DOMove(targetPosition, MoveTime))
                 .OnComplete(MovingCompleted);
 
             return _moveSequence;
@@ -135,7 +145,6 @@ namespace PlayneraTest.Code.Scripts.Hand
         public async UniTask Grab(RectTransform target, CancellationToken token, bool isRotateNeeded = false,
             Vector3 rotateDirection = default)
         {
-            Debug.Log("Grab");
             float rotateTime = 0.2f;
             float scalefactor = 1.2f;
             float scaleTime = 0.2f;
@@ -149,7 +158,6 @@ namespace PlayneraTest.Code.Scripts.Hand
                 .OnComplete(() =>
                 {
                     task.TrySetResult();
-                    Debug.Log("OnComplete");
                 });
             
             using var registration = token.Register(() =>
@@ -168,22 +176,19 @@ namespace PlayneraTest.Code.Scripts.Hand
             if (isRotateNeeded)
             {
                 sequence
-                    .Append(transform.DOScale(scalefactor, scaleTime))
+                    .Append(target.transform.DOScale(scalefactor, scaleTime))
                     .Join(target.DORotate(rotateDirection, rotateTime))
                     .OnComplete(() =>
                     {
                         sequence.Kill();
                     });
             }
-            
-            Debug.Log($"DragEnded");
-            
         }
 
         public void Clear()
         {
             _isMakeupReady = false;
-            Offset = Vector3.zero;
+            _offset = Vector3.zero;
             MoveTime = MOVE_TIME;
         }
 
@@ -210,6 +215,32 @@ namespace PlayneraTest.Code.Scripts.Hand
         private void MovingStartPositionComplete()
         {
             OnStartPosition?.Invoke();
+        }
+
+        public void SetOffset(RectTransform targetOffsetPosition)
+        {
+            // 1. Получаем позицию цели в экранных координатах (пиксели экрана)
+            Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, targetOffsetPosition.position);
+
+            // 2. Преобразуем экранные координаты цели в локальные координаты текущего объекта
+            //    Это самый важный шаг: мы узнаем, где находится цель *относительно нас*.
+            bool success = RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                _rectTransform, // Текущий объект (наша рука)
+                screenPosition,
+                null, // Камера. Если Canvas в режиме Screen Space - Overlay, можно передать null.
+                out Vector2 localPoint);
+
+            if (success)
+            {
+                // 3. Сохраняем результат как смещение.
+                // Теперь _offset — это вектор в локальных координатах нашего RectTransform,
+                // указывающий на то место, где находится цель.
+                _offset = localPoint;
+            }
+            else
+            {
+                Debug.LogError("Не удалось вычислить смещение. Проверь настройки Canvas и камеры.");
+            }
         }
     }
 }

@@ -17,9 +17,6 @@ namespace PlayneraTest.Code.Scripts.Hand
         
         private RectTransform _rectTransform;
         private Vector2 _pointerOffset;
-        private Vector2 _anchorsMin;
-        private Vector2 _anchorsMax;
-        private Vector2 _anchoredPosition;
         private CancellationTokenSource _cancell;
 
         private void Awake()
@@ -30,18 +27,6 @@ namespace PlayneraTest.Code.Scripts.Hand
         public void OnBeginDrag(PointerEventData eventData)
         {
             OnDragBegin?.Invoke();
-            
-            Vector3 rootPosition = _rectTransform.position;
-            
-            // _anchorsMin = _rectTransform.anchorMin;
-            // _anchorsMax = _rectTransform.anchorMax;
-            // _anchoredPosition = _rectTransform.anchoredPosition;
-            
-            _rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-            _rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-            
-            _rectTransform.position = rootPosition;
-
             
            var isLocalPoint = RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, eventData.position,
                 eventData.pressEventCamera, out Vector2 localPoint);
@@ -69,7 +54,6 @@ namespace PlayneraTest.Code.Scripts.Hand
         {
             OnDropped?.Invoke();
         }
-        
 
         private void OnDestroy()
         {

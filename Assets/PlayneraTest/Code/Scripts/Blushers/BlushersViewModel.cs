@@ -52,7 +52,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brushHandle = _makeup.BrushHandle;
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
-            float handStartMoveTime = _hand.MoveTime;
+            var yoyoPoints = _makeup.Blush.GetComponent<IYoyoMakeup>().YoyoPoints;
             float scale = 1.15f;
             float scaleDuration = 0.2f;
             Vector3 rotateDirection = new Vector3(0, 0, -90);
@@ -62,13 +62,21 @@ namespace PlayneraTest.Code.Scripts.Blushers
             
             await _hand.Grab(brushHandle, token, true, rotateDirection);
             
+            _hand.SetOffset(blush);
             brushHandle.SetParent(_hand.RectTransform);
             brushHandle.SetAsLastSibling();
             
+            await _hand.MoveAsync(blush, token);
+            Debug.Log("Move blush complete");
+
+            //await _hand.PlayYoyoAnimationAsync(yoyoPoints, 3, token);
+
+            await _hand.MoveToBottomMakeupPosition(token);
+
             /* UniTaskCompletionSource task = new UniTaskCompletionSource();
-            
+
             Sequence sequence = DOTween.Sequence();
-            
+
             sequence
                 .Append(brushHandle.transform.DOScale(scale, scaleDuration))
                 .Append(brushHandle.transform.DORotate(rotateDirection, rotateDuration))
@@ -80,22 +88,22 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 sequence.Kill();
                 Debug.Log($"<color=yellow>{GetType()} : Cancelled</color>");
             });
-            
+
             await task.Task;
-            
+
             _hand.Offset = brush.transform.position - _hand.transform.position;
             _hand.transform.SetAsLastSibling();
-            
+
             await _hand.MoveAsync(blush, token);
-            
+
             var yoyoPoints = blush.GetComponent<IYoyoMakeup>().YoyoPoints;
             _hand.MoveTime = yoyoSpeed;
-            
+
             await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCount, token);
-            
+
             _hand.MoveTime = handStartMoveTime;
-            
-            await _hand.MoveAsync(Girl.BottomMakeupPosition, token); 
+
+            await _hand.MoveAsync(Girl.BottomMakeupPosition, token);
             */
         }
         
