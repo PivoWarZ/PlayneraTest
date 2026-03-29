@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -13,7 +14,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
     public class BlushersViewModel: IBlushersViewModel, IDisposable, INeedHandService
     {
         private BlushMakeupTargets _makeup = new BlushMakeupTargets();
-        private HandView _hand;
+        private IHandView _hand;
         private bool _isMakeupProcessing;
         private CancellationTokenSource _cancell = new CancellationTokenSource();
         private IHandService _handService;
@@ -33,6 +34,17 @@ namespace PlayneraTest.Code.Scripts.Blushers
         void IDisposable.Dispose()
         {
             _cancell.Cancel();
+
+        }
+        
+        private async UniTask RunMakeUpEventAnimation(UniTaskCompletionSource<bool> task, CancellationToken cancellToken)
+        {
+            Debug.Log("<color=green>CHEEKS/color><>");
+            List<Vector3> yoyoPoints = new();
+            yoyoPoints = Girl.Cheeks.GetComponent<MakeUpZone>().YoyoPoints;
+            _hand.MoveTime = _hand.MoveTime / 12;
+            await _hand.PlayYoyoAnimationAsync(yoyoPoints, 6, _cancell.Token);
+            task.TrySetResult(true);
         }
 
         private async UniTask RunMakeupRequest(CancellationToken token)
@@ -48,12 +60,12 @@ namespace PlayneraTest.Code.Scripts.Blushers
             int yoyoCount = 6;
             float yoyoSpeed = _hand.MoveTime / 12;
             
-            await _hand.MoveAsync(brushHandle, token);
+            await _hand.Grab(brushHandle, token, true, rotateDirection);
             
-            brushHandle.SetParent(_hand.transform);
+            brushHandle.SetParent(_hand.RectTransform);
             brushHandle.SetAsLastSibling();
             
-            UniTaskCompletionSource task = new UniTaskCompletionSource();
+            /* UniTaskCompletionSource task = new UniTaskCompletionSource();
             
             Sequence sequence = DOTween.Sequence();
             
@@ -83,7 +95,8 @@ namespace PlayneraTest.Code.Scripts.Blushers
             
             _hand.MoveTime = handStartMoveTime;
             
-            await _hand.MoveAsync(Girl.BottomMakeupPosition, token);
+            await _hand.MoveAsync(Girl.BottomMakeupPosition, token); 
+            */
         }
         
         void IMakeUpViewModel.BreakMakeUp()

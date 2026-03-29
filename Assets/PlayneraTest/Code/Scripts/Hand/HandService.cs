@@ -1,4 +1,5 @@
 ﻿using System;
+using PlayneraTest.Code.Scripts.Interfaces;
 
 namespace PlayneraTest.Code.Scripts.Hand
 {
@@ -23,7 +24,7 @@ namespace PlayneraTest.Code.Scripts.Hand
             OnServiceInitialized?.Invoke();
         }
 
-        public HandView GetHand()
+        public IHandView GetHand()
         {
             return _hand;
         }

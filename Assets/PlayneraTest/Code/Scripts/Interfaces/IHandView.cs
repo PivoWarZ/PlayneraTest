@@ -14,13 +14,15 @@ namespace PlayneraTest.Code.Scripts.Interfaces
         public event Action OnMovingComplete;
         public event Action OnYoYoStarted;
         public event Action OnYoYoEnded;
-        public event Action<Vector2> OnDropped;
+		public event Action OnDropped;
         public float MoveTime { get; set; }
         public Vector3 Offset { get; set; }
+        public RectTransform RectTransform { get; }
         public void ReturnToStartPosition();
         public void Clear();
-        public Sequence Move(Vector3 target);
         UniTask MoveAsync(RectTransform target, CancellationToken token);
         UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token);
+        UniTask Grab(RectTransform target, CancellationToken token, bool isRotateNeeded = false,
+            Vector3 rotateDirection = default);
     }
 }

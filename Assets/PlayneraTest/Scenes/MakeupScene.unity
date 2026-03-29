@@ -419,6 +419,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 162782742}
   m_CullTransparentMesh: 1
+--- !u!1001 &221030786
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7795440888158033897}
+    m_Modifications:
+    - target: {fileID: 3096787731825886489, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_Name
+      value: HandNew
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1165.2634
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1433.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -300
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
 --- !u!1 &292332053
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +793,7 @@ GameObject:
   - component: {fileID: 433519712}
   - component: {fileID: 433519714}
   - component: {fileID: 433519713}
+  - component: {fileID: 433519715}
   m_Layer: 5
   m_Name: "\u0421heeks"
   m_TagString: Untagged
@@ -762,6 +860,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 433519711}
   m_CullTransparentMesh: 1
+--- !u!114 &433519715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433519711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b30e54123cf455888f84843ff4fc0e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.MakeUpZone
+  _yoyoPoints:
+  - {fileID: 537810044}
+  - {fileID: 1008390400}
 --- !u!1 &436421810
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,6 +2158,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1252850989}
   m_CullTransparentMesh: 1
+--- !u!224 &1437423335 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
+  m_PrefabInstance: {fileID: 221030786}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1463532151
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5012,6 +5130,7 @@ RectTransform:
   - {fileID: 7011110628030045929}
   - {fileID: 6091364407629034997}
   - {fileID: 48886290}
+  - {fileID: 1437423335}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5137,7 +5256,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 7
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

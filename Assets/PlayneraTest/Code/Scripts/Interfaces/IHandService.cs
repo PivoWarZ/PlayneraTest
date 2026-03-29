@@ -1,4 +1,5 @@
 ﻿using System;
+using PlayneraTest.Code.Scripts.Interfaces;
 
 namespace PlayneraTest.Code.Scripts.Hand
 {
@@ -7,6 +8,6 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnServiceInitialized;
         public bool IsInitialized { get; }
         public void Initialize(HandView hand);
-        public HandView GetHand();
+        public IHandView GetHand();
     }
 }

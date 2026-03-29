@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using PlayneraTest.Code.Scripts.Interfaces;
+using PlayneraTest.Code.Scripts.MakeupGirl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,13 +11,16 @@ namespace PlayneraTest.Code.Scripts.Hand
 {
     public class DragAndDropHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IDropHandler
     {
-        public event Action<Vector2> OnDropped;
+        public event Action OnDropped;
+        public event Action OnDragBegin;
+        public event Action OnDragEnded;
         
         private RectTransform _rectTransform;
         private Vector2 _pointerOffset;
         private Vector2 _anchorsMin;
         private Vector2 _anchorsMax;
         private Vector2 _anchoredPosition;
+        private CancellationTokenSource _cancell;
 
         private void Awake()
         {
@@ -22,11 +29,13 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public void OnBeginDrag(PointerEventData eventData)
         {
+            OnDragBegin?.Invoke();
+            
             Vector3 rootPosition = _rectTransform.position;
             
-            _anchorsMin = _rectTransform.anchorMin;
-            _anchorsMax = _rectTransform.anchorMax;
-            _anchoredPosition = _rectTransform.anchoredPosition;
+            // _anchorsMin = _rectTransform.anchorMin;
+            // _anchorsMax = _rectTransform.anchorMax;
+            // _anchoredPosition = _rectTransform.anchoredPosition;
             
             _rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
             _rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
@@ -53,15 +62,18 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public void OnEndDrag(PointerEventData eventData)
         {
-
+            OnDragEnded?.Invoke();
         }
 
         public void OnDrop(PointerEventData eventData)
         {
-            OnDropped?.Invoke(eventData.position);
-            _rectTransform.anchorMin = _anchorsMin;
-            _rectTransform.anchorMax = _anchorsMax;
-            _rectTransform.anchoredPosition = _anchoredPosition;
+            OnDropped?.Invoke();
+        }
+        
+
+        private void OnDestroy()
+        {
+            _cancell?.Cancel();
         }
     }
 }

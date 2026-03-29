@@ -4,9 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using PlayneraTest.Code.Scripts.Interfaces;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 using Sequence = DG.Tweening.Sequence;
 
 namespace PlayneraTest.Code.Scripts.Hand
@@ -18,12 +16,14 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnMovingComplete;
         public event Action OnYoYoStarted;
         public event Action OnYoYoEnded;
-        public event Action<Vector2> OnDropped;
+		public event Action OnDropped;
         public float MoveTime { get; set; }
         public Vector3 Offset { get; set; }
+        public RectTransform RectTransform => _rectTransform;
         
         [SerializeField] private List<GameObject> _hands;
         [SerializeField] private DragAndDropHandler _dragAndDropHandler;
+        private RectTransform _rectTransform;
         private RectTransform _startPosition;
         private bool _isMakeupReady;
         Sequence _moveSequence;
@@ -33,18 +33,12 @@ namespace PlayneraTest.Code.Scripts.Hand
         {
             Clear();
             _startPosition = transform.GetComponent<RectTransform>();
-            _dragAndDropHandler.OnDropped += Dropped;
+            _rectTransform = GetComponent<RectTransform>();
         }
 
         private void OnDestroy()
         {
             _moveSequence?.Kill();
-            _dragAndDropHandler.OnDropped -= Dropped;
-        }
-        
-        private void Dropped(Vector2 droppedPosition)
-        {
-            OnDropped?.Invoke(droppedPosition);
         }
 
         public async UniTask MoveAsync(RectTransform target, CancellationToken token)
@@ -57,31 +51,10 @@ namespace PlayneraTest.Code.Scripts.Hand
                 task.TrySetCanceled();
                 _moveSequence.Kill();
             });
-
-            if (!_isMakeupReady)
-            {
-                _moveSequence
-                    .Append(Move(target.position))
-                    .InsertCallback(MoveTime/1.15f, () =>
-                    {
-                        HideWrist(_hands[0].gameObject);
-                        ShowWrist(_hands[1].gameObject);
-                    })
-                    .OnComplete(() =>
-                    {
-                        HideWrist(_hands[1].gameObject);
-                        ShowWrist(_hands[2].gameObject);
-                        task.TrySetResult();
-                        _isMakeupReady = true;
-                    })
-                    .SetEase(Ease.InSine);
-            }
-            else
-            {
-                _moveSequence
+            
+            _moveSequence
                     .Append(Move(target.position))
                     .OnComplete(() => task.TrySetResult());
-            }
             
             await task.Task;
             
@@ -125,7 +98,7 @@ namespace PlayneraTest.Code.Scripts.Hand
                 .OnComplete(MovingStartPositionComplete);
         }
 
-        public Sequence Move(Vector3 target)
+        private Sequence Move(Vector3 target)
         {
             _moveSequence = DOTween.Sequence();
 
@@ -135,6 +108,76 @@ namespace PlayneraTest.Code.Scripts.Hand
                 .OnComplete(MovingCompleted);
 
             return _moveSequence;
+        }
+
+        private Sequence GrabSequence(Vector3 target)
+        {
+            Sequence sequence = DOTween.Sequence();
+            
+            sequence
+                .Append(Move(target))
+                .InsertCallback(MoveTime/1.15f, () =>
+                {
+                    HideWrist(_hands[0].gameObject);
+                    ShowWrist(_hands[1].gameObject);
+                })
+                .OnComplete(() =>
+                {
+                    HideWrist(_hands[1].gameObject);
+                    ShowWrist(_hands[2].gameObject);
+                    _isMakeupReady = true;
+                })
+                .SetEase(Ease.InSine);
+            
+            return sequence;
+        }
+
+        public async UniTask Grab(RectTransform target, CancellationToken token, bool isRotateNeeded = false,
+            Vector3 rotateDirection = default)
+        {
+            Debug.Log("Grab");
+            float rotateTime = 0.2f;
+            float scalefactor = 1.2f;
+            float scaleTime = 0.2f;
+            
+            UniTaskCompletionSource task = new UniTaskCompletionSource();
+            
+            _moveSequence = DOTween.Sequence();
+            _moveSequence
+                .Append(Move(target.position))
+                .Join(GrabSequence(target.position))
+                .OnComplete(() =>
+                {
+                    task.TrySetResult();
+                    Debug.Log("OnComplete");
+                });
+            
+            using var registration = token.Register(() =>
+            {
+                task.TrySetCanceled();
+                _moveSequence.Kill();
+                Debug.Log($"<color=yellow>{GetType()} : Cancelled</color>");
+            });
+            
+            await task.Task;
+            
+            _moveSequence.Kill();
+            
+            Sequence sequence = DOTween.Sequence();
+            
+            if (isRotateNeeded)
+            {
+                sequence
+                    .Append(transform.DOScale(scalefactor, scaleTime))
+                    .Join(target.DORotate(rotateDirection, rotateTime))
+                    .OnComplete(() =>
+                    {
+                        sequence.Kill();
+                    });
+            }
+            
+            Debug.Log($"DragEnded");
+            
         }
 
         public void Clear()
