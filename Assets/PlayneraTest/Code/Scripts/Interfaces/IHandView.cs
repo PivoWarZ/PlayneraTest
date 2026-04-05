@@ -18,9 +18,9 @@ namespace PlayneraTest.Code.Scripts.Interfaces
 		public event Action OnDropped;
         public float MoveTime { get; set; }
         public RectTransform RectTransform { get; }
-        public void ReturnToStartPosition();
         public void Clear();
         public void SetOffset(Vector3 offset);
+        public UniTask ReturnToStartPosition(CancellationToken token);
         UniTask MoveAsync(Vector3 target, CancellationToken token);
         UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token);
         UniTask MoveToBottomMakeupPosition(CancellationToken token);

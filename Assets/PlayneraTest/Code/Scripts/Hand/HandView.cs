@@ -21,13 +21,14 @@ namespace PlayneraTest.Code.Scripts.Hand
         public float MoveTime { get; set; }
         public RectTransform RectTransform => _rectTransform;
         
-        [SerializeField] private List<GameObject> _hands;
+        [SerializeField] private GameObject[] _hands;
         [SerializeField] private DragAndDropHandler _dragAndDropHandler;
         private Vector3 _offset;
         private RectTransform _rectTransform;
         private Vector3 _startPosition;
+        private HandAnimator _animator;
         private bool _isMakeupReady;
-        Sequence _moveSequence;
+        private UniTaskCompletionSource _completeTask;
         private const float MOVE_TIME = 1f;
 
         private void Awake()
@@ -35,61 +36,67 @@ namespace PlayneraTest.Code.Scripts.Hand
             Clear();
             _rectTransform = GetComponent<RectTransform>();
             _startPosition = _rectTransform.position;
+
+            MoveParameters parameters = new MoveParameters
+            {
+                MoveTime = MOVE_TIME
+            };
+            
+            _animator = new HandAnimator(transform, parameters);
+            _animator.OnAnimationCompleted += CompleteTask;
+            
+            _dragAndDropHandler.OnDropped += OnDrop;
+        }
+
+        private void OnDrop()
+        {
+            OnDropped?.Invoke();
         }
 
         private void OnDestroy()
         {
-            _moveSequence?.Kill();
+            _animator.OnAnimationCompleted -= CompleteTask;
+        }
+
+        private void CompleteTask()
+        {
+            _completeTask.TrySetResult();
         }
 
         public async UniTask MoveAsync(Vector3 target, CancellationToken token)
         {
-            UniTaskCompletionSource task = new UniTaskCompletionSource();
-            _moveSequence = DOTween.Sequence();
+            target -= _offset;
+            
+            _completeTask = new UniTaskCompletionSource();
             
             using var registration = token.Register(() =>
             {
-                task.TrySetCanceled();
-                _moveSequence.Kill();
+                _completeTask.TrySetCanceled();
+                _animator.Clear();
             });
+
+            _animator.NewAnimation.AddMoving(target).Run();
             
-            AddMovingTweens(target, _moveSequence);
-                _moveSequence
-                    .OnComplete(() => task.TrySetResult());
-            
-            await task.Task;
-            
-            _moveSequence.Kill();
+            await _completeTask.Task;
         }
 
         public async UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token)
         {
-            UniTaskCompletionSource task = new UniTaskCompletionSource();
-            _moveSequence = DOTween.Sequence().Pause();
+            _completeTask = new UniTaskCompletionSource();
 
             using var registration = token.Register(() =>
             {
-                task.TrySetCanceled();
-                _moveSequence.Kill();
+                _completeTask.TrySetCanceled();
+                _animator.Clear();
             });
             
-            _moveSequence.AppendCallback(() => OnYoYoStarted?.Invoke());
-
-            yoyoPoints.ForEach(x => AddMovingTweens(x, _moveSequence));
+            List<Vector3> yoyoPointsWithOffset = new List<Vector3>();
             
-            _moveSequence.SetLoops(yoyoCount, LoopType.Yoyo);
+            yoyoPoints.ForEach(y => yoyoPointsWithOffset.Add(y-_offset));
             
-            _moveSequence.OnComplete(() =>
-            {
-                OnYoYoEnded?.Invoke();
-                task.TrySetResult();
-            });
-
-            _moveSequence.Play();
+            _animator.NewAnimation.AddYoyo(yoyoPointsWithOffset, yoyoCount).Run();
             
-            await task.Task;
-            
-            _moveSequence.Kill();
+            await _completeTask.Task;
         }
 
         public async UniTask MoveToBottomMakeupPosition(CancellationToken token)
@@ -97,68 +104,26 @@ namespace PlayneraTest.Code.Scripts.Hand
             await MoveAsync(Girl.BottomMakeupPosition.position, token);
         }
 
-        public void ReturnToStartPosition()
+        public async UniTask ReturnToStartPosition(CancellationToken token)
         {
             Clear();
-            AddMovingTweens(_startPosition, _moveSequence);
-                _moveSequence
-                .OnComplete(MovingStartPositionComplete);
-        }
-
-        private void AddMovingTweens(Vector3 target, Sequence sequence)
-        {
-            var targetPosition = target - _offset;
-            Debug.Log($"Target position: {targetPosition}");
-            Debug.Log($"Move Offset {_offset}");
-            
-            sequence
-                .AppendCallback(MoveStarted)
-                .Append(transform.DOMove(targetPosition, MoveTime))
-                .OnComplete(MovingCompleted);
-        }
-
-        private void AddGrabTweens(Sequence sequence)
-        {
-            sequence
-                .InsertCallback(MoveTime/1.15f, () =>
-                {
-                    HideWrist(_hands[0].gameObject);
-                    ShowWrist(_hands[1].gameObject);
-                })
-                .OnComplete(() =>
-                {
-                    HideWrist(_hands[1].gameObject);
-                    ShowWrist(_hands[2].gameObject);
-                    _isMakeupReady = true;
-                })
-                .SetEase(Ease.InSine);
+            await MoveAsync(_startPosition, token);
+            MovingStartPositionComplete();
         }
 
         public async UniTask Grab(Vector3 target, CancellationToken token)
         {
-            
-            UniTaskCompletionSource task = new UniTaskCompletionSource();
-            
-            _moveSequence = DOTween.Sequence();
-            
-            AddMovingTweens(target, _moveSequence);
-            AddGrabTweens(_moveSequence);
-            _moveSequence
-                .OnComplete(() =>
-                {
-                    task.TrySetResult();
-                });
+            _completeTask = new UniTaskCompletionSource();
             
             using var registration = token.Register(() =>
             {
-                task.TrySetCanceled();
-                _moveSequence.Kill();
-                Debug.Log($"<color=yellow>{GetType()} : Cancelled</color>");
+                _completeTask.TrySetCanceled();
+                _animator.Clear();
             });
             
-            await task.Task;
+            _animator.NewAnimation.AddMoving(target).AddGrab(_hands).Run();
             
-            _moveSequence.Kill();
+            await _completeTask.Task;
         }
 
         public async UniTask GrabAndRotate(RectTransform target, RotationParameters parameters, CancellationToken token)
@@ -169,24 +134,17 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public async UniTask Rotate(RectTransform target, RotationParameters parameters, CancellationToken token)
         {
-            Vector3 rotateDirection = parameters.RotateDirection;
-            float rotateTime = parameters.RotateTime;
-            float scalefactor = parameters.ScaleFactor;
-            float scaleTime = parameters.ScaleTime;
+            _completeTask = new UniTaskCompletionSource();
             
-            UniTaskCompletionSource task = new UniTaskCompletionSource();
-            Sequence sequence = DOTween.Sequence();
+            using var registration = token.Register(() =>
+            {
+                _completeTask.TrySetCanceled();
+                _animator.Clear();
+            });
             
-            sequence
-                .Append(target.transform.DOScale(scalefactor, scaleTime))
-                .Join(target.DORotate(rotateDirection, rotateTime))
-                .OnComplete(() =>
-                {
-                    sequence.Kill();
-                    task.TrySetResult();
-                });
+            _animator.NewAnimation.AddRotate(target, parameters).Run();
             
-            await task.Task;
+            await _completeTask.Task;
         }
 
         public void Clear()
@@ -194,26 +152,6 @@ namespace PlayneraTest.Code.Scripts.Hand
             _isMakeupReady = false;
             _offset = Vector3.zero;
             MoveTime = MOVE_TIME;
-        }
-
-        private void ShowWrist(GameObject obj)
-        {
-            obj.SetActive(true);
-        }
-
-        private void HideWrist(GameObject obj)
-        {
-            obj.SetActive(false);
-        }
-
-        private void MoveStarted()
-        {
-            OnMoveStarted?.Invoke();
-        }
-
-        private void MovingCompleted()
-        {
-            OnMovingComplete?.Invoke();
         }
 
         private void MovingStartPositionComplete()

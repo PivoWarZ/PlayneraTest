@@ -36,16 +36,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _cancell.Cancel();
 
         }
-        
-        private async UniTask RunMakeUpEventAnimation(UniTaskCompletionSource<bool> task, CancellationToken cancellToken)
-        {
-            Debug.Log("<color=green>CHEEKS/color><>");
-            List<Vector3> yoyoPoints = new();
-            yoyoPoints = Girl.Cheeks.GetComponent<MakeUpZone>().YoyoPoints;
-            _hand.MoveTime = _hand.MoveTime / 12;
-            await _hand.PlayYoyoAnimationAsync(yoyoPoints, 6, _cancell.Token);
-            task.TrySetResult(true);
-        }
 
         private async UniTask RunMakeupRequest(CancellationToken token)
         {
@@ -53,24 +43,88 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
             var yoyoPoints = _makeup.Blush.GetComponent<IYoyoMakeup>().YoyoPoints;
-            int yoyoCount = 6;
+            int yoyoCount = 3;
             float yoyoSpeed = _hand.MoveTime / 12;
+            var brushHandleStartPosition = _makeup.BrushHandle.position;
+            float backAnimationSpeedModifier = 0.3f;
 
             var rotateParameters = GetRotateParameters();
             
             await _hand.GrabAndRotate(brushHandle, rotateParameters, token);
             
-           brushHandle.SetParent(_hand.RectTransform);
-           brushHandle.SetAsLastSibling();
+            brushHandle.SetParent(_hand.RectTransform);
+            brushHandle.SetAsLastSibling();
+            
             var offset =  brush.position - _hand.RectTransform.position;
              _hand.SetOffset(offset);
-             Debug.Log($"Brush position {brush.position} Hand {_hand.RectTransform.position}");
-            Debug.Log(offset);
-            Debug.Log($"Blush position {blush.position}");
-            
+             
              await _hand.MoveAsync(blush.position, token);
+             await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCount, token);
              await _hand.MoveToBottomMakeupPosition(token);
+             await WaitingMakeUpPosition(token);
+             await MakeUp(token);
+             
+             _hand.SetOffset(Vector3.zero);
+             Settings.AnimationSpeedModifier = backAnimationSpeedModifier;
+             await _hand.MoveAsync(brushHandleStartPosition, token);
+             
+             rotateParameters.RotateDirection = Vector3.zero;
+             await _hand.Rotate(brushHandle, rotateParameters, token);
+             
+             brushHandle.SetParent(_hand.RectTransform.root);
+             await _hand.ReturnToStartPosition(token);
+             
+             Settings.AnimationSpeedModifier = 1;
+        }
 
+        private async UniTask WaitingMakeUpPosition(CancellationToken token)
+        {
+            bool isMakeUpPosition = false;
+            float returnAnimationSpeedModifier = 0.2f;
+            UniTaskCompletionSource<bool> makeupTargetTask;
+
+            while (!isMakeUpPosition)
+            {
+                token.ThrowIfCancellationRequested();
+                
+                 makeupTargetTask = new UniTaskCompletionSource<bool>();
+                
+                void CompleteTask()
+                {
+                    var point = Girl.Cheeks.InverseTransformPoint(_makeup.Brush.position);
+                    makeupTargetTask.TrySetResult(Girl.Cheeks.rect.Contains(point));
+                }
+                
+                _hand.OnDropped += CompleteTask;
+                
+                isMakeUpPosition = await makeupTargetTask.Task.AttachExternalCancellation(token);
+                Debug.Log($"<color=yellow> {isMakeUpPosition} </color>");
+
+                try
+                {
+                    if (!isMakeUpPosition)
+                    {
+                        Settings.AnimationSpeedModifier = returnAnimationSpeedModifier;
+                        await _hand.MoveToBottomMakeupPosition(token);
+                        Settings.AnimationSpeedModifier = 1f;
+                    }
+                }
+                finally
+                {
+                    _hand.OnDropped -= CompleteTask;
+                }
+            }
+        }
+
+        private async UniTask MakeUp(CancellationToken token)
+        {
+            Debug.Log($"<color=green> MAKE UP!!!! </color>");
+            
+            List<Vector3> yoyoPoints = new List<Vector3>();
+            yoyoPoints.Add(Girl.FaceBrushLeft.position);
+            yoyoPoints.Add(Girl.FaceBrushRight.position);
+            
+            await _hand.PlayYoyoAnimationAsync(yoyoPoints, 3, token);
         }
 
         private RotationParameters GetRotateParameters()

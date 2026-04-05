@@ -26,7 +26,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             get
             {
                 List<Vector3> yoyoPoints = new List<Vector3>();
-                _yoyoPoints.ForEach(p => yoyoPoints.Add(p.transform.position));
+                _yoyoPoints.ForEach(p => yoyoPoints.Add(p.position));
                 return yoyoPoints;
             }
         }
