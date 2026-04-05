@@ -60,53 +60,17 @@ namespace PlayneraTest.Code.Scripts.Blushers
             
             await _hand.GrabAndRotate(brushHandle, rotateParameters, token);
             
-            brush.SetParent(_hand.RectTransform);
-            brush.SetAsLastSibling();
-            var offset = brush.position - _hand.RectTransform.position;
+           brushHandle.SetParent(_hand.RectTransform);
+           brushHandle.SetAsLastSibling();
+            var offset =  brush.position - _hand.RectTransform.position;
              _hand.SetOffset(offset);
              Debug.Log($"Brush position {brush.position} Hand {_hand.RectTransform.position}");
             Debug.Log(offset);
             Debug.Log($"Blush position {blush.position}");
             
              await _hand.MoveAsync(blush.position, token);
-            // Debug.Log("Move blush complete");
-            //
-            // //await _hand.PlayYoyoAnimationAsync(yoyoPoints, 3, token);
-            //
-            // await _hand.MoveToBottomMakeupPosition(token);
+             await _hand.MoveToBottomMakeupPosition(token);
 
-            /* UniTaskCompletionSource task = new UniTaskCompletionSource();
-
-            Sequence sequence = DOTween.Sequence();
-
-            sequence
-                .Append(brushHandle.transform.DOScale(scale, scaleDuration))
-                .Append(brushHandle.transform.DORotate(rotateDirection, rotateDuration))
-                .OnComplete(() => task.TrySetResult());
-
-            using var registration = token.Register(() =>
-            {
-                task.TrySetCanceled();
-                sequence.Kill();
-                Debug.Log($"<color=yellow>{GetType()} : Cancelled</color>");
-            });
-
-            await task.Task;
-
-            _hand.Offset = brush.transform.position - _hand.transform.position;
-            _hand.transform.SetAsLastSibling();
-
-            await _hand.MoveAsync(blush, token);
-
-            var yoyoPoints = blush.GetComponent<IYoyoMakeup>().YoyoPoints;
-            _hand.MoveTime = yoyoSpeed;
-
-            await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCount, token);
-
-            _hand.MoveTime = handStartMoveTime;
-
-            await _hand.MoveAsync(Girl.BottomMakeupPosition, token);
-            */
         }
 
         private RotationParameters GetRotateParameters()

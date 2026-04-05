@@ -107,7 +107,7 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         private void AddMovingTweens(Vector3 target, Sequence sequence)
         {
-			var targetPosition = target + _offset;
+            var targetPosition = target - _offset;
             Debug.Log($"Target position: {targetPosition}");
             Debug.Log($"Move Offset {_offset}");
             
