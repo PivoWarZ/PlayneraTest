@@ -13,10 +13,11 @@ namespace PlayneraTest.Code.Scripts.Blushers
 {
     public class BlushersViewModel: IBlushersViewModel, IDisposable, INeedHandService
     {
+        public event Action OnMakeUpAnomationCompleted;
         private BlushMakeupTargets _makeup = new BlushMakeupTargets();
         private IHandView _hand;
         private bool _isMakeupProcessing;
-        private CancellationTokenSource _cancell = new CancellationTokenSource();
+        private CancellationTokenSource _cancell;
         private IHandService _handService;
 
         void IBlushersViewModel.SetMakeupTarget(BlushMakeupTargets targets)
@@ -26,15 +27,33 @@ namespace PlayneraTest.Code.Scripts.Blushers
         
         void IMakeUpViewModel.StartMakeUp()
         {
+            if (_isMakeupProcessing)
+            {
+                Cancel();
+                return;
+            }
+
+            _cancell = new CancellationTokenSource();
+            
             _isMakeupProcessing = true;
             _hand = _handService.GetHand();
-            RunMakeupRequest(_cancell.Token).Forget();
+            var token = _cancell.Token;
+            
+            RunMakeupRequest(token).Forget();
         }
         
         void IDisposable.Dispose()
         {
-            _cancell.Cancel();
+            _cancell?.Cancel();
+            _cancell?.Dispose();
 
+        }
+
+        private void Cancel()
+        {
+            _cancell?.Cancel();
+            _cancell?.Dispose();
+            Debug.Log($"<color=green>Cancellation MakeUp!</color>");
         }
 
         private async UniTask RunMakeupRequest(CancellationToken token)
@@ -47,34 +66,66 @@ namespace PlayneraTest.Code.Scripts.Blushers
             float yoyoSpeed = _hand.MoveTime / 12;
             var brushHandleStartPosition = _makeup.BrushHandle.position;
             float backAnimationSpeedModifier = 0.3f;
-
             var rotateParameters = GetRotateParameters();
             
-            await _hand.GrabAndRotate(brushHandle, rotateParameters, token);
+            using var registration = token.Register(() =>
+            {
+                Cancel();
+                _cancell = new CancellationTokenSource();
+                var token = _cancell.Token;
+                Return(token).Forget();
+            });
             
-            brushHandle.SetParent(_hand.RectTransform);
-            brushHandle.SetAsLastSibling();
+            async UniTask Return(CancellationToken token)
+            {
+                _hand.SetOffset(Vector3.zero);
+                Settings.AnimationSpeedModifier = backAnimationSpeedModifier;
+                await _hand.MoveAsync(brushHandleStartPosition, token).AttachExternalCancellation(token);
+
+                rotateParameters.RotateDirection = Vector3.zero;
+                await _hand.Rotate(brushHandle, rotateParameters, token).AttachExternalCancellation(token);
+
+                brushHandle.SetParent(_hand.RectTransform.root);
+                await _hand.ReturnToStartPosition(token).AttachExternalCancellation(token);
+
+                Settings.AnimationSpeedModifier = 1;
+                OnMakeUpAnomationCompleted?.Invoke();
+                _isMakeupProcessing = false;
+            }
+
+            try
+            {
+                await _hand.GrabAndRotate(brushHandle, rotateParameters, token);
+
+                brushHandle.SetParent(_hand.RectTransform);
+                brushHandle.SetAsLastSibling();
+
+                var offset = brush.position - _hand.RectTransform.position;
+                _hand.SetOffset(offset);
+
+                await _hand.MoveAsync(blush.position, token);
+                await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCount, token);
+                await _hand.MoveToBottomMakeupPosition(token);
+                await WaitingMakeUpPosition(token);
+                await MakeUp(token);
+                await Return(token);
+                
+            }
+            finally
+            {
+                if (_isMakeupProcessing)
+                {
+                    Cancel();
+                    _cancell = new CancellationTokenSource();
+                    var finallyToken = _cancell.Token;
+                    Return(finallyToken).Forget();
+                }
+                else
+                {
+                    Cancel();
+                }
+            }
             
-            var offset =  brush.position - _hand.RectTransform.position;
-             _hand.SetOffset(offset);
-             
-             await _hand.MoveAsync(blush.position, token);
-             await _hand.PlayYoyoAnimationAsync(yoyoPoints, yoyoCount, token);
-             await _hand.MoveToBottomMakeupPosition(token);
-             await WaitingMakeUpPosition(token);
-             await MakeUp(token);
-             
-             _hand.SetOffset(Vector3.zero);
-             Settings.AnimationSpeedModifier = backAnimationSpeedModifier;
-             await _hand.MoveAsync(brushHandleStartPosition, token);
-             
-             rotateParameters.RotateDirection = Vector3.zero;
-             await _hand.Rotate(brushHandle, rotateParameters, token);
-             
-             brushHandle.SetParent(_hand.RectTransform.root);
-             await _hand.ReturnToStartPosition(token);
-             
-             Settings.AnimationSpeedModifier = 1;
         }
 
         private async UniTask WaitingMakeUpPosition(CancellationToken token)
@@ -142,7 +193,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         void IMakeUpViewModel.BreakMakeUp()
         {
-            throw new System.NotImplementedException();
+            Cancel();
         }
 
         void INeedHandService.Initialize(IHandService handService)
