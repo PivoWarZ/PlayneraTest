@@ -25,7 +25,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         [SerializeField] private DragAndDropHandler _dragAndDropHandler;
         private Vector3 _offset;
         private RectTransform _rectTransform;
-        private RectTransform _startPosition;
+        private Vector3 _startPosition;
         private bool _isMakeupReady;
         Sequence _moveSequence;
         private const float MOVE_TIME = 1f;
@@ -33,8 +33,8 @@ namespace PlayneraTest.Code.Scripts.Hand
         private void Awake()
         {
             Clear();
-            _startPosition = transform.GetComponent<RectTransform>();
             _rectTransform = GetComponent<RectTransform>();
+            _startPosition = _rectTransform.position;
         }
 
         private void OnDestroy()
@@ -42,7 +42,7 @@ namespace PlayneraTest.Code.Scripts.Hand
             _moveSequence?.Kill();
         }
 
-        public async UniTask MoveAsync(RectTransform target, CancellationToken token)
+        public async UniTask MoveAsync(Vector3 target, CancellationToken token)
         {
             UniTaskCompletionSource task = new UniTaskCompletionSource();
             _moveSequence = DOTween.Sequence();
@@ -53,15 +53,15 @@ namespace PlayneraTest.Code.Scripts.Hand
                 _moveSequence.Kill();
             });
             
-            _moveSequence
-                    .Append(Move(target.transform.position))
+            AddMovingTweens(target, _moveSequence);
+                _moveSequence
                     .OnComplete(() => task.TrySetResult());
             
             await task.Task;
             
             _moveSequence.Kill();
         }
-        
+
         public async UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token)
         {
             UniTaskCompletionSource task = new UniTaskCompletionSource();
@@ -75,7 +75,7 @@ namespace PlayneraTest.Code.Scripts.Hand
             
             _moveSequence.AppendCallback(() => OnYoYoStarted?.Invoke());
 
-            yoyoPoints.ForEach(x => _moveSequence.Append(Move(x)));
+            yoyoPoints.ForEach(x => AddMovingTweens(x, _moveSequence));
             
             _moveSequence.SetLoops(yoyoCount, LoopType.Yoyo);
             
@@ -94,38 +94,32 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public async UniTask MoveToBottomMakeupPosition(CancellationToken token)
         {
-            await MoveAsync(Girl.BottomMakeupPosition, token);
+            await MoveAsync(Girl.BottomMakeupPosition.position, token);
         }
 
         public void ReturnToStartPosition()
         {
             Clear();
-            _moveSequence = Move(_startPosition.position)
+            AddMovingTweens(_startPosition, _moveSequence);
+                _moveSequence
                 .OnComplete(MovingStartPositionComplete);
         }
 
-        private Sequence Move(Vector3 target)
+        private void AddMovingTweens(Vector3 target, Sequence sequence)
         {
-			var targetPosition = target - _offset;
-            Debug.Log($"targetPosition: {targetPosition} Offset: {_offset}");
-            transform.SetAsLastSibling();
+			var targetPosition = target + _offset;
+            Debug.Log($"Target position: {targetPosition}");
+            Debug.Log($"Move Offset {_offset}");
             
-            _moveSequence = DOTween.Sequence();
-
-            _moveSequence
+            sequence
                 .AppendCallback(MoveStarted)
                 .Append(transform.DOMove(targetPosition, MoveTime))
                 .OnComplete(MovingCompleted);
-
-            return _moveSequence;
         }
 
-        private Sequence GrabSequence(Vector3 target)
+        private void AddGrabTweens(Sequence sequence)
         {
-            Sequence sequence = DOTween.Sequence();
-            
             sequence
-                .Append(Move(target))
                 .InsertCallback(MoveTime/1.15f, () =>
                 {
                     HideWrist(_hands[0].gameObject);
@@ -138,23 +132,18 @@ namespace PlayneraTest.Code.Scripts.Hand
                     _isMakeupReady = true;
                 })
                 .SetEase(Ease.InSine);
-            
-            return sequence;
         }
 
-        public async UniTask Grab(RectTransform target, CancellationToken token, bool isRotateNeeded = false,
-            Vector3 rotateDirection = default)
+        public async UniTask Grab(Vector3 target, CancellationToken token)
         {
-            float rotateTime = 0.2f;
-            float scalefactor = 1.2f;
-            float scaleTime = 0.2f;
             
             UniTaskCompletionSource task = new UniTaskCompletionSource();
             
             _moveSequence = DOTween.Sequence();
+            
+            AddMovingTweens(target, _moveSequence);
+            AddGrabTweens(_moveSequence);
             _moveSequence
-                .Append(Move(target.position))
-                .Join(GrabSequence(target.position))
                 .OnComplete(() =>
                 {
                     task.TrySetResult();
@@ -170,19 +159,34 @@ namespace PlayneraTest.Code.Scripts.Hand
             await task.Task;
             
             _moveSequence.Kill();
+        }
+
+        public async UniTask GrabAndRotate(RectTransform target, RotationParameters parameters, CancellationToken token)
+        {
+            await Grab(target.position, token);
+            await Rotate(target, parameters, token);
+        }
+
+        public async UniTask Rotate(RectTransform target, RotationParameters parameters, CancellationToken token)
+        {
+            Vector3 rotateDirection = parameters.RotateDirection;
+            float rotateTime = parameters.RotateTime;
+            float scalefactor = parameters.ScaleFactor;
+            float scaleTime = parameters.ScaleTime;
             
+            UniTaskCompletionSource task = new UniTaskCompletionSource();
             Sequence sequence = DOTween.Sequence();
             
-            if (isRotateNeeded)
-            {
-                sequence
-                    .Append(target.transform.DOScale(scalefactor, scaleTime))
-                    .Join(target.DORotate(rotateDirection, rotateTime))
-                    .OnComplete(() =>
-                    {
-                        sequence.Kill();
-                    });
-            }
+            sequence
+                .Append(target.transform.DOScale(scalefactor, scaleTime))
+                .Join(target.DORotate(rotateDirection, rotateTime))
+                .OnComplete(() =>
+                {
+                    sequence.Kill();
+                    task.TrySetResult();
+                });
+            
+            await task.Task;
         }
 
         public void Clear()
@@ -217,30 +221,9 @@ namespace PlayneraTest.Code.Scripts.Hand
             OnStartPosition?.Invoke();
         }
 
-        public void SetOffset(RectTransform targetOffsetPosition)
+        public void SetOffset(Vector3 offset)
         {
-            // 1. Получаем позицию цели в экранных координатах (пиксели экрана)
-            Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, targetOffsetPosition.position);
-
-            // 2. Преобразуем экранные координаты цели в локальные координаты текущего объекта
-            //    Это самый важный шаг: мы узнаем, где находится цель *относительно нас*.
-            bool success = RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                _rectTransform, // Текущий объект (наша рука)
-                screenPosition,
-                null, // Камера. Если Canvas в режиме Screen Space - Overlay, можно передать null.
-                out Vector2 localPoint);
-
-            if (success)
-            {
-                // 3. Сохраняем результат как смещение.
-                // Теперь _offset — это вектор в локальных координатах нашего RectTransform,
-                // указывающий на то место, где находится цель.
-                _offset = localPoint;
-            }
-            else
-            {
-                Debug.LogError("Не удалось вычислить смещение. Проверь настройки Canvas и камеры.");
-            }
+           _offset = offset;
         }
     }
 }

@@ -473,7 +473,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 7611807234887245474, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3875,16 +3875,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1970596172}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 275013970800745407}
+  m_Children:
+  - {fileID: 275013970800745407}
+  m_Father: {fileID: 7795440888158033897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 28, y: 0.000030517578}
+  m_AnchoredPosition: {x: 465.73193, y: -657.396}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &2064052354
@@ -4008,14 +4009,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1970596173}
-  m_Father: {fileID: 6091364407629034997}
+  m_Children: []
+  m_Father: {fileID: 1970596173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.34634575, y: 0.24215984}
   m_AnchorMax: {x: 0.68489414, y: 0.2856804}
-  m_AnchoredPosition: {x: 6.251404, y: -44.583374}
-  m_SizeDelta: {x: 229.47581, y: 101.03613}
+  m_AnchoredPosition: {x: 140.32178, y: 23.607971}
+  m_SizeDelta: {x: 405.91278, y: 120.06028}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &290123068188661848
 MonoBehaviour:
@@ -4934,7 +4934,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 436421811}
-  - {fileID: 275013970800745407}
   - {fileID: 2135293017859670620}
   m_Father: {fileID: 7795440888158033897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5128,6 +5127,7 @@ RectTransform:
   - {fileID: 4711610722503852462}
   - {fileID: 4351562762587603073}
   - {fileID: 7011110628030045929}
+  - {fileID: 1970596173}
   - {fileID: 6091364407629034997}
   - {fileID: 48886290}
   - {fileID: 1437423335}

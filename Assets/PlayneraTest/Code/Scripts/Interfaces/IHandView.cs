@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using PlayneraTest.Code.Scripts.Hand;
 using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Interfaces
@@ -19,11 +20,12 @@ namespace PlayneraTest.Code.Scripts.Interfaces
         public RectTransform RectTransform { get; }
         public void ReturnToStartPosition();
         public void Clear();
-        public void SetOffset(RectTransform targetOffsetPosition);
-        UniTask MoveAsync(RectTransform target, CancellationToken token);
+        public void SetOffset(Vector3 offset);
+        UniTask MoveAsync(Vector3 target, CancellationToken token);
         UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token);
         UniTask MoveToBottomMakeupPosition(CancellationToken token);
-        UniTask Grab(RectTransform target, CancellationToken token, bool isRotateNeeded = false,
-            Vector3 rotateDirection = default);
+        UniTask Grab(Vector3 target, CancellationToken token);
+        UniTask GrabAndRotate(RectTransform target, RotationParameters parameters, CancellationToken token);
+        UniTask Rotate(RectTransform target, RotationParameters parameters, CancellationToken token);
     }
 }

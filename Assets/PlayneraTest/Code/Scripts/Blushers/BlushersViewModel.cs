@@ -53,25 +53,27 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
             var yoyoPoints = _makeup.Blush.GetComponent<IYoyoMakeup>().YoyoPoints;
-            float scale = 1.15f;
-            float scaleDuration = 0.2f;
-            Vector3 rotateDirection = new Vector3(0, 0, -90);
-            float rotateDuration = 0.3f;
             int yoyoCount = 6;
             float yoyoSpeed = _hand.MoveTime / 12;
-            
-            await _hand.Grab(brushHandle, token, true, rotateDirection);
-            
-            _hand.SetOffset(blush);
-            brushHandle.SetParent(_hand.RectTransform);
-            brushHandle.SetAsLastSibling();
-            
-            await _hand.MoveAsync(blush, token);
-            Debug.Log("Move blush complete");
 
-            //await _hand.PlayYoyoAnimationAsync(yoyoPoints, 3, token);
-
-            await _hand.MoveToBottomMakeupPosition(token);
+            var rotateParameters = GetRotateParameters();
+            
+            await _hand.GrabAndRotate(brushHandle, rotateParameters, token);
+            
+            brush.SetParent(_hand.RectTransform);
+            brush.SetAsLastSibling();
+            var offset = brush.position - _hand.RectTransform.position;
+             _hand.SetOffset(offset);
+             Debug.Log($"Brush position {brush.position} Hand {_hand.RectTransform.position}");
+            Debug.Log(offset);
+            Debug.Log($"Blush position {blush.position}");
+            
+             await _hand.MoveAsync(blush.position, token);
+            // Debug.Log("Move blush complete");
+            //
+            // //await _hand.PlayYoyoAnimationAsync(yoyoPoints, 3, token);
+            //
+            // await _hand.MoveToBottomMakeupPosition(token);
 
             /* UniTaskCompletionSource task = new UniTaskCompletionSource();
 
@@ -106,7 +108,20 @@ namespace PlayneraTest.Code.Scripts.Blushers
             await _hand.MoveAsync(Girl.BottomMakeupPosition, token);
             */
         }
-        
+
+        private RotationParameters GetRotateParameters()
+        {
+            RotationParameters parameters = new RotationParameters
+            {
+                RotateDirection = new Vector3(0, 0, -90),
+                RotateTime = 0.2f,
+                ScaleTime = 0.2f,
+                ScaleFactor = 1.15f,
+            };
+            
+            return parameters;
+        }
+
         void IMakeUpViewModel.BreakMakeUp()
         {
             throw new System.NotImplementedException();
