@@ -44,15 +44,16 @@ namespace PlayneraTest.Code.Scripts.Blushers
         
         void IDisposable.Dispose()
         {
-            _cancell?.Cancel();
-            _cancell?.Dispose();
-
+            Cancel();
         }
 
         private void Cancel()
         {
-            _cancell?.Cancel();
-            _cancell?.Dispose();
+            if (!_cancell.IsCancellationRequested)
+            {
+                _cancell?.Cancel();
+                _cancell?.Dispose();
+            }
             Debug.Log($"<color=green>Cancellation MakeUp!</color>");
         }
 
@@ -67,30 +68,20 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brushHandleStartPosition = _makeup.BrushHandle.position;
             float backAnimationSpeedModifier = 0.3f;
             var rotateParameters = GetRotateParameters();
+            bool isReturn = false;
             
-            using var registration = token.Register(() =>
+            async UniTask Return(CancellationToken tcn)
             {
-                Cancel();
-                _cancell = new CancellationTokenSource();
-                var token = _cancell.Token;
-                Return(token).Forget();
-            });
-            
-            async UniTask Return(CancellationToken token)
-            {
+                isReturn = true;
                 _hand.SetOffset(Vector3.zero);
                 Settings.AnimationSpeedModifier = backAnimationSpeedModifier;
-                await _hand.MoveAsync(brushHandleStartPosition, token).AttachExternalCancellation(token);
+                await _hand.MoveAsync(brushHandleStartPosition, tcn);
 
                 rotateParameters.RotateDirection = Vector3.zero;
-                await _hand.Rotate(brushHandle, rotateParameters, token).AttachExternalCancellation(token);
+                await _hand.Rotate(brushHandle, rotateParameters, tcn);
 
                 brushHandle.SetParent(_hand.RectTransform.root);
-                await _hand.ReturnToStartPosition(token).AttachExternalCancellation(token);
-
-                Settings.AnimationSpeedModifier = 1;
-                OnMakeUpAnomationCompleted?.Invoke();
-                _isMakeupProcessing = false;
+                await _hand.ReturnToStartPosition(tcn);
             }
 
             try
@@ -109,23 +100,22 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 await WaitingMakeUpPosition(token);
                 await MakeUp(token);
                 await Return(token);
-                
+
+            }
+            catch (OperationCanceledException)
+            {
+                using (var timeoutSource = new CancellationTokenSource(TimeSpan.FromSeconds(3)))
+                {
+                    await Return(timeoutSource.Token);
+                }
             }
             finally
             {
-                if (_isMakeupProcessing)
-                {
-                    Cancel();
-                    _cancell = new CancellationTokenSource();
-                    var finallyToken = _cancell.Token;
-                    Return(finallyToken).Forget();
-                }
-                else
-                {
-                    Cancel();
-                }
+                Settings.AnimationSpeedModifier = 1;
+                OnMakeUpAnomationCompleted?.Invoke();
+                _isMakeupProcessing = false;
             }
-            
+
         }
 
         private async UniTask WaitingMakeUpPosition(CancellationToken token)
@@ -149,7 +139,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 _hand.OnDropped += CompleteTask;
                 
                 isMakeUpPosition = await makeupTargetTask.Task.AttachExternalCancellation(token);
-                Debug.Log($"<color=yellow> {isMakeUpPosition} </color>");
 
                 try
                 {
