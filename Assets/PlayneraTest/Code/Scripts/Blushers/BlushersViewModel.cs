@@ -49,11 +49,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         private void Cancel()
         {
-            if (!_cancell.IsCancellationRequested)
-            {
-                _cancell?.Cancel();
-                _cancell?.Dispose();
-            }
+      		_cancell.Cancel();
+        	_cancell.Dispose();
+        	_cancell = null;
             Debug.Log($"<color=green>Cancellation MakeUp!</color>");
         }
 
@@ -72,6 +70,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
             
             async UniTask Return(CancellationToken tcn)
             {
+                if(isReturn)
+                    return;
+                
                 isReturn = true;
                 _hand.SetOffset(Vector3.zero);
                 Settings.AnimationSpeedModifier = backAnimationSpeedModifier;
