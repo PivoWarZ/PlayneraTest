@@ -46,7 +46,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
       		_cancell.Cancel();
         	_cancell.Dispose();
         	_cancell = null;
-            Debug.Log($"<color=green>Cancellation MakeUp!</color>");
         }
 
         private async UniTask RunMakeupRequest(CancellationToken token)
