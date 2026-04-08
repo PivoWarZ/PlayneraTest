@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82c72efa9331461c9284fc921ca89e42, type: 3}
-  m_Name: ConfigsProvider
+  m_Name: ConfigsGlobal
   m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Configs
   _configs:
   - {fileID: 11400000, guid: 9ca178e500f35614b874a60b84507eab, type: 2}

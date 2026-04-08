@@ -35,7 +35,7 @@ namespace PlayneraTest.Code.Scripts.MakeupGirl
 
         private void Awake()
         {
-            Girl.Initialize(this);
+            GirlFaceMakeupPositions.Initialize(this);
         }
     }
 }

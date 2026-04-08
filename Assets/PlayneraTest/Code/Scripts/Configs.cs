@@ -1,23 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
+using PlayneraTest.Code.Configs.ScriptablesScripts;
 using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts
 {
     [CreateAssetMenu(fileName = "ConfigsProvider", menuName = "Configs/ConfigsProvider/New ConfigsProvider")]
-    public class Configs: ScriptableObject
+    public class Configs: ScriptableSingleton<Configs>
     {
-        [SerializeField] private List<ScriptableObject> _configs;
+        [SerializeField] private List<ScriptableObject> _settings;
+        private Dictionary<Type, ScriptableObject> _settingsByType = new ();
+        private Dictionary<string, ScriptableObject> _settingsByName = new (); 
+        private bool _isInitialized;
 
-        public T GetConfig<T>() where T : ScriptableObject
+        private void Initialize()
         {
-            foreach (var scriptableObject in _configs)
+            foreach (var setting in _settings)
             {
-                if (scriptableObject is T config)
-                    return config;
+                if (setting == null) 
+                    continue;
+                
+                var prototype = Instantiate(setting);
+                
+                _settingsByType.Add(setting.GetType(), prototype);
+                _settingsByName.Add(prototype.name, prototype);
             }
             
-            throw new Exception("Config not found");
+            _isInitialized = true;
+        }
+
+        public T Get<T>() where T : ScriptableObject
+        {
+            TryInitialize();
+            
+            Type type = typeof(T);
+            
+            if (_settingsByType.TryGetValue(type, out var config))
+            {
+                return (T)config; 
+            }
+            
+            Debug.LogError($"Config of type {type.Name} not found!");
+            
+            return null;
+        }
+
+        public ScriptableObject this[String typeName]
+        {
+            get
+            {
+                TryInitialize();
+                
+                if (_settingsByName.TryGetValue(typeName, out var item))
+                {
+                    return item;
+                }
+                
+                Debug.LogError($"Config of type {typeName} not found!");
+            
+                return null;
+            }
+        }
+
+        private void TryInitialize()
+        {
+            if (!_isInitialized)
+            {
+                Initialize();
+            }
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using PlayneraTest.Code.Scripts.Hand;
 using UnityEngine;
 
@@ -21,11 +20,11 @@ namespace PlayneraTest.Code.Scripts.Interfaces
         public void Clear();
         public void SetOffset(Vector3 offset);
         public UniTask ReturnToStartPosition(CancellationToken token);
-        UniTask MoveAsync(Vector3 target, CancellationToken token);
+        UniTask MoveAsync(Vector3 target, CancellationToken token, bool isBack = false);
         UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token);
         UniTask MoveToBottomMakeupPosition(CancellationToken token);
         UniTask Grab(Vector3 target, CancellationToken token);
-        UniTask GrabAndRotate(RectTransform target, RotationParameters parameters, CancellationToken token);
-        UniTask Rotate(RectTransform target, RotationParameters parameters, CancellationToken token);
+        UniTask GrabAndRotate(RectTransform target, RotateParameters parameters, CancellationToken token);
+        UniTask Rotate(RectTransform target, RotateParameters parameters, CancellationToken token);
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Cysharp.Threading.Tasks;
-using PlayneraTest.Code.Scripts.Interfaces;
-using PlayneraTest.Code.Scripts.MakeupGirl;
 using UnityEngine;
 using UnityEngine.EventSystems;
 

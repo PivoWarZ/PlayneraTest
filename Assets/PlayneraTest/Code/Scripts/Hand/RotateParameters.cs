@@ -2,7 +2,7 @@
 
 namespace PlayneraTest.Code.Scripts.Hand
 {
-    public struct RotationParameters
+    public struct RotateParameters
     {
         public Vector3 RotateDirection;
         public float RotateTime;

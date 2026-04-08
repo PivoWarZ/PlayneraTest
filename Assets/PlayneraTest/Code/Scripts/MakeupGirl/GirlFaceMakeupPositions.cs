@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.MakeupGirl
 {
-    public static class Girl
+    public static class GirlFaceMakeupPositions
     {
         private static IGirlView _girlView;
         public static RectTransform Head => _girlView.Head;

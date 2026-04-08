@@ -15,15 +15,24 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnYoyoEnded;
         private Sequence _sequence;
         private Transform _transform;
-        private MoveParameters _parameters;
+        private AnimationParameters _parameters;
 
-        public HandAnimator(Transform movingTransform, MoveParameters parameters)
+        public HandAnimator(Transform movingTransform)
         {
             _transform = movingTransform;
-            _parameters = parameters;
+            _parameters = Configs.Instance.Get<AnimationParameters>();
         }
+        public Sequence Sequence => _sequence;
 
         public HandAnimator NewAnimation => CreateAnimation();
+        public HandAnimator IsBackAnimation => SetBackAnimation();
+
+        private HandAnimator SetBackAnimation()
+        {
+            _sequence.PrependCallback(() => _parameters.SetBackAnimationsSpeed());
+            
+            return this;
+        }
 
         private HandAnimator CreateAnimation()
         {
@@ -39,7 +48,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         public HandAnimator AddMoving(Vector3 target)
         {
             _transform.SetAsLastSibling();
-            var animationTime = _parameters.MoveTime * Settings.AnimationSpeedModifier;
+            var animationTime = _parameters.MoveTime ;
             
             _sequence
                 .AppendCallback(MoveStarted)
@@ -51,20 +60,18 @@ namespace PlayneraTest.Code.Scripts.Hand
         
         private void AddMoving(Vector3 target, float duration)
         {
-            var animationTime = duration * Settings.AnimationSpeedModifier;
-            
             _transform.SetAsLastSibling();
             
             _sequence
                 .AppendCallback(MoveStarted)
-                .Append(_transform.DOMove(target, animationTime))
+                .Append(_transform.DOMove(target, duration))
                 .OnComplete(MovingCompleted);
         }
         
-        public HandAnimator AddRotate(RectTransform target, RotationParameters parameters)
+        public HandAnimator AddRotate(RectTransform target, RotateParameters parameters)
         {
             Vector3 rotateDirection = parameters.RotateDirection;
-            float rotateTime = parameters.RotateTime * Settings.AnimationSpeedModifier;
+            float rotateTime = parameters.RotateTime;
             float scalefactor = parameters.ScaleFactor;
             float scaleTime = parameters.ScaleTime;
 
@@ -77,7 +84,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         
         public HandAnimator AddGrab(GameObject[] hands)
         {
-            var animationTime = _parameters.MoveTime * Settings.AnimationSpeedModifier;
+            var animationTime = _parameters.MoveTime;
             
             _sequence
                 .InsertCallback(animationTime/1.15f, () =>
@@ -111,6 +118,7 @@ namespace PlayneraTest.Code.Scripts.Hand
             _sequence
                 .OnComplete(() =>
                 {
+                    _parameters.RefreshSpeedModifier();
                     _sequence.Kill();
                     OnAnimationCompleted?.Invoke();
                 });
@@ -120,7 +128,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         {
             _sequence.AppendCallback(() => OnYoyoStarted?.Invoke());
 
-            yoyoPoints.ForEach(x => AddMoving(x, _parameters.MoveTime / 10));
+            yoyoPoints.ForEach(x => AddMoving(x, _parameters.YoyoSpeed));
             
             _sequence.SetLoops(yoyoCount, LoopType.Yoyo);
 
@@ -129,7 +137,8 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public void Clear()
         {
-            _sequence.Kill();
+            _parameters.RefreshSpeedModifier();
+            _sequence?.Kill();
         }
 
         private void MoveStarted()

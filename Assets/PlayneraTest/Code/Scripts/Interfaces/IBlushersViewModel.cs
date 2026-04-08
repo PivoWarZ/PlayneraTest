@@ -1,5 +1,4 @@
 ﻿using PlayneraTest.Code.Scripts.Blushers;
-using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Interfaces
 {

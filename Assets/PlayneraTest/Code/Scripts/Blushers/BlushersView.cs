@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PlayneraTest.Code.Scripts.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,7 +23,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         private void Start()
         {
-            BlushersConfig config = Resources.Load<Configs>("ConfigsProvider").GetConfig<BlushersConfig>();
+            BlushersConfig config = Configs.Instance.Get<BlushersConfig>();
             
             for (int i=0; i < _blushs.Count; i++)
             {

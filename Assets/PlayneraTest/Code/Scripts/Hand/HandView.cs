@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using PlayneraTest.Code.Scripts.Interfaces;
 using PlayneraTest.Code.Scripts.MakeupGirl;
 using UnityEngine;
-using Sequence = DG.Tweening.Sequence;
 
 namespace PlayneraTest.Code.Scripts.Hand
 {
@@ -28,22 +26,14 @@ namespace PlayneraTest.Code.Scripts.Hand
         private Vector3 _startPosition;
         private HandAnimator _animator;
         private bool _isMakeupReady;
-        private UniTaskCompletionSource _completeTask;
-        private const float MOVE_TIME = 1f;
+        private bool _isYoyoAnimation;
 
         private void Awake()
         {
             Clear();
             _rectTransform = GetComponent<RectTransform>();
             _startPosition = _rectTransform.position;
-
-            MoveParameters parameters = new MoveParameters
-            {
-                MoveTime = MOVE_TIME
-            };
-            
-            _animator = new HandAnimator(transform, parameters);
-            _animator.OnAnimationCompleted += CompleteTask;
+            _animator = new HandAnimator(transform);
             
             _dragAndDropHandler.OnDropped += OnDrop;
         }
@@ -52,43 +42,32 @@ namespace PlayneraTest.Code.Scripts.Hand
         {
             OnDropped?.Invoke();
         }
+        
 
-        private void OnDestroy()
+        public async UniTask MoveAsync(Vector3 target, CancellationToken token, bool isBack = false)
         {
-            _animator.OnAnimationCompleted -= CompleteTask;
-        }
-
-        private void CompleteTask()
-        {
-            _completeTask.TrySetResult();
-        }
-
-        public async UniTask MoveAsync(Vector3 target, CancellationToken token)
-        {
+            token.ThrowIfCancellationRequested();
+            
             target -= _offset;
-            
-            _completeTask = new UniTaskCompletionSource();
-            
-            using var registration = token.Register(() =>
-            {
-                _completeTask.TrySetCanceled();
-                _animator.Clear();
-            });
 
-            _animator.NewAnimation.AddMoving(target).Run();
-            
-            await _completeTask.Task;
+            _animator.NewAnimation.AddMoving(target);
+
+            if (isBack)
+            {
+                _animator.IsBackAnimation.Run();
+            }
+            else
+            {
+                _animator.Run();
+            }
+
+            await AwaitingAnimationAsync(token);
         }
 
         public async UniTask PlayYoyoAnimationAsync(List<Vector3> yoyoPoints, int yoyoCount, CancellationToken token)
         {
-            _completeTask = new UniTaskCompletionSource();
-
-            using var registration = token.Register(() =>
-            {
-                _completeTask.TrySetCanceled();
-                _animator.Clear();
-            });
+            
+            token.ThrowIfCancellationRequested();
             
             List<Vector3> yoyoPointsWithOffset = new List<Vector3>();
             
@@ -96,62 +75,58 @@ namespace PlayneraTest.Code.Scripts.Hand
             
             _animator.NewAnimation.AddYoyo(yoyoPointsWithOffset, yoyoCount).Run();
             
-            await _completeTask.Task;
+            await AwaitingAnimationAsync(token);
+        }
+
+        private async UniTask AwaitingAnimationAsync(CancellationToken token)
+        {
+            try
+            {
+                await _animator.Sequence.ToUniTask(cancellationToken: token);
+            }
+            catch (OperationCanceledException)
+            {
+                _animator.Clear();
+                throw;
+            }
         }
 
         public async UniTask MoveToBottomMakeupPosition(CancellationToken token)
         {
-            await MoveAsync(Girl.BottomMakeupPosition.position, token);
+            await MoveAsync(GirlFaceMakeupPositions.BottomMakeupPosition.position, token);
         }
 
         public async UniTask ReturnToStartPosition(CancellationToken token)
         {
             Clear();
-            await MoveAsync(_startPosition, token);
+            await MoveAsync(_startPosition, token, true);
             MovingStartPositionComplete();
         }
 
         public async UniTask Grab(Vector3 target, CancellationToken token)
         {
-            _completeTask = new UniTaskCompletionSource();
-            
-            using var registration = token.Register(() =>
-            {
-                _completeTask.TrySetCanceled();
-                _animator.Clear();
-            });
-            
             _animator.NewAnimation.AddMoving(target).AddGrab(_hands).Run();
             
-            await _completeTask.Task;
+            await AwaitingAnimationAsync(token);
         }
 
-        public async UniTask GrabAndRotate(RectTransform target, RotationParameters parameters, CancellationToken token)
+        public async UniTask GrabAndRotate(RectTransform target, RotateParameters parameters, CancellationToken token)
         {
             await Grab(target.position, token);
             await Rotate(target, parameters, token);
         }
 
-        public async UniTask Rotate(RectTransform target, RotationParameters parameters, CancellationToken token)
+        public async UniTask Rotate(RectTransform target, RotateParameters parameters, CancellationToken token)
         {
-            _completeTask = new UniTaskCompletionSource();
-            
-            using var registration = token.Register(() =>
-            {
-                _completeTask.TrySetCanceled();
-                _animator.Clear();
-            });
-            
             _animator.NewAnimation.AddRotate(target, parameters).Run();
             
-            await _completeTask.Task;
+            await AwaitingAnimationAsync(token);
         }
 
         public void Clear()
         {
             _isMakeupReady = false;
             _offset = Vector3.zero;
-            MoveTime = MOVE_TIME;
         }
 
         private void MovingStartPositionComplete()

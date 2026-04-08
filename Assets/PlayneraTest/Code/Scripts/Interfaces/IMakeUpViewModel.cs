@@ -1,11 +1,10 @@
 ﻿using System;
-using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Interfaces
 {
     public interface IMakeUpViewModel
     {
-        public event Action OnMakeUpAnomationCompleted;
+        public event Action OnMakeUpAnimationCompleted;
         void StartMakeUp();
         void BreakMakeUp();
     }
