@@ -72,6 +72,5 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 _hand = hand;
             }
         }
-        
     }
 }

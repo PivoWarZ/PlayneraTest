@@ -1,15 +1,9 @@
-﻿using System.Collections.Generic;
-using PlayneraTest.Code.Scripts.Hand;
-using UnityEngine;
+﻿using PlayneraTest.Code.Scripts.Hand;
 
 namespace PlayneraTest.Code.Scripts.Interfaces
 {
-    public interface IBlushersModel
+    public interface IBlushersModel: IMakeupModel
     {
-        List<Vector3> GetYoyoPoints(RectTransform yoyo);
-        IHandView Hand { get; }
-        int YoyoCount { get; }
-
         RotateParameters GetRotateParameters();
     }
 }

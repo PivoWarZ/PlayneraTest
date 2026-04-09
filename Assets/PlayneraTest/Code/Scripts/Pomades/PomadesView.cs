@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PlayneraTest.Code.Scripts.Interfaces;
 using UnityEngine;
 using Zenject;
@@ -25,7 +26,26 @@ namespace PlayneraTest.Code.Scripts.Pomades
                 var pomade = _pomades[index];
                 pomade.Image.sprite = config.Pomades[index].Lipstick;
                 pomade.LipkColor = config.Pomades[index].LipColor;
+
+                pomade.OnMakeupRequest += StartMakeup;
             }
+        }
+
+        private void OnDestroy()
+        {
+            for (var index = 0; index < _pomades.Count; index++)
+            {
+                var pomade = _pomades[index];
+                pomade.OnMakeupRequest -= StartMakeup;
+            }
+        }
+        
+        private void StartMakeup(GameObject obj)
+        {
+            var pomade = obj.GetComponent<PomadeView>();
+            transform.SetAsLastSibling();
+            _viewModel.Initialize(pomade);
+            _viewModel.StartMakeUp();
         }
     }
 }

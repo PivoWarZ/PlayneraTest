@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e3f2a76fa142578d32aae73747b78e, type: 3}
   m_Name: PomadesConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadesConfig
-  _pomades: []
-  ShadowColor: {r: 0, g: 0, b: 0, a: 0}
+  _pomades:
+  - Lipstick: {fileID: 21300000, guid: d1b47a42ba00de14f835c8774b34d595, type: 3}
+    LipColor: {fileID: 21300000, guid: addf45fd5864da1439e99ba97ad2ac8f, type: 3}
+  - Lipstick: {fileID: 21300000, guid: 52caef9964a8bd44ca294d778d0331b1, type: 3}
+    LipColor: {fileID: 21300000, guid: b243467cfdf448440a58a477c4510a50, type: 3}
+  - Lipstick: {fileID: 21300000, guid: f4de69edb8b373f4db7529821b5028db, type: 3}
+    LipColor: {fileID: 21300000, guid: ae139f75076c1bc4b911e32b9b0a14f7, type: 3}
+  - Lipstick: {fileID: 21300000, guid: 6510f4b22796de6478008b075af37db9, type: 3}
+    LipColor: {fileID: 21300000, guid: 05c4f9c8577755a478f9ef5f6948a3dc, type: 3}
+  - Lipstick: {fileID: 21300000, guid: e6baff187cd8c614c851ecfc955bc1c0, type: 3}
+    LipColor: {fileID: 21300000, guid: cbdc6df65506e344081c4c3689459f23, type: 3}
+  - Lipstick: {fileID: 21300000, guid: d4607b1785eba6440b0eafa459c9eed1, type: 3}
+    LipColor: {fileID: 21300000, guid: 6709d7b23dbc6f24a83b3299cdf45c14, type: 3}
+  ShadowColor: {r: 0.12156863, g: 0.14509805, b: 0.22352941, a: 0.23921569}

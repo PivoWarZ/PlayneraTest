@@ -18,6 +18,7 @@ namespace PlayneraTest.Code.Scripts.DI
             Container.BindInterfacesAndSelfTo<BlushersModel>().AsCached();
             Container.BindInterfacesAndSelfTo<HandSpeedHandler>().AsCached().NonLazy();
             Container.BindInterfacesAndSelfTo<PomadesViewModel>().AsCached();
+            Container.BindInterfacesAndSelfTo<PomadesModel>().AsCached();
         }
     }
 }

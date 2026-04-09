@@ -39,7 +39,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _isMakeupProcessing = true;
             var token = _cancell.Token;
             
-            RunMakeupRequest(token).Forget();
+            ((IMakeupViewModel)this).RunMakeupAsync(token).Forget();
         }
         
         void IDisposable.Dispose()
@@ -54,7 +54,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
         	_cancell = null;
         }
 
-        private async UniTask RunMakeupRequest(CancellationToken token)
+        async UniTask IMakeupViewModel.RunMakeupAsync(CancellationToken token)
         {
             IHandView hand = _model.Hand;
             var brushHandle = _makeup.BrushHandle;
@@ -124,7 +124,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
         {
             bool isMakeUpPosition = false;
             IHandView hand = _model.Hand;
-            float returnAnimationSpeedModifier = 0.2f;
             UniTaskCompletionSource<bool> makeupTargetTask;
 
             while (!isMakeUpPosition)
