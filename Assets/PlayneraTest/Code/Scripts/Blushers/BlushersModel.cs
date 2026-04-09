@@ -8,7 +8,7 @@ using Zenject;
 
 namespace PlayneraTest.Code.Scripts.Blushers
 {
-    public class BlushersModel: IInitializable, IDisposable
+    public class BlushersModel: IInitializable, IDisposable, IBlushersModel
     {
         private IHandView _hand;
         private IHandService _handService;
@@ -34,13 +34,16 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _handService.OnServiceInitialized -= TrySetHand;
         }
 
-        public List<Vector3> GetYoyoPoints()
+        public List<Vector3> GetYoyoPoints(RectTransform rect)
         {
-            List<Vector3> yoyoPoints = new List<Vector3>();
-            yoyoPoints.Add(GirlFaceMakeupPositions.FaceBrushLeft.position);
-            yoyoPoints.Add(GirlFaceMakeupPositions.FaceBrushRight.position);
-            
-            return yoyoPoints;
+            var canYoyo = rect.TryGetComponent<IYoyoMakeup>(out var yoyo);
+
+            if (canYoyo)
+            {
+                return yoyo.YoyoPoints;
+            }
+
+            throw new ArgumentNullException();
         }
         
         public RotateParameters GetRotateParameters()

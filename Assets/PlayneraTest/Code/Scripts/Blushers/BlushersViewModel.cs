@@ -9,11 +9,17 @@ namespace PlayneraTest.Code.Scripts.Blushers
 {
     public class BlushersViewModel: IBlushersViewModel, IDisposable
     {
-        public event Action OnMakeUpAnimationCompleted;
+        public event Action OnMakeUpCompleted;
+        public event Action OnMakeUpCancelled;
         private IBlushersModel _model;
         private BlushMakeupTargets _makeup;
         private bool _isMakeupProcessing;
         private CancellationTokenSource _cancell;
+
+        public BlushersViewModel(IBlushersModel model)
+        {
+            _model = model;
+        }
 
         void IBlushersViewModel.SetMakeupTarget(BlushMakeupTargets targets)
         {
@@ -54,27 +60,10 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brushHandle = _makeup.BrushHandle;
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
-            var yoyoPoints = _model.GetYoyoPoints();
             var brushHandleStartPosition = _makeup.BrushHandle.position;
             var rotateParameters = _model.GetRotateParameters();
             bool isReturn = false;
             
-            async UniTask Return(CancellationToken tcn)
-            {
-                if(isReturn)
-                    return;
-                
-                isReturn = true;
-                hand.SetOffset(Vector3.zero);
-                await hand.MoveAsync(brushHandleStartPosition, tcn);
-
-                rotateParameters.RotateDirection = Vector3.zero;
-                await hand.Rotate(brushHandle, rotateParameters, tcn);
-
-                brushHandle.SetParent(hand.RectTransform.root);
-                await hand.ReturnToStartPosition(tcn);
-            }
-
             try
             {
                 await hand.GrabAndRotate(brushHandle, rotateParameters, token);
@@ -86,10 +75,12 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 hand.SetOffset(offset);
 
                 await hand.MoveAsync(blush.position, token);
-                await hand.PlayYoyoAnimationAsync(_model.GetYoyoPoints(), _model.YoyoCount, token);
+                await hand.PlayYoyoAnimationAsync(_model.GetYoyoPoints(blush), _model.YoyoCount, token);
                 await hand.MoveToBottomMakeupPosition(token);
                 await WaitingMakeUpPosition(token);
                 await MakeUp(token);
+                
+                
                 await Return(token);
 
             }
@@ -102,10 +93,27 @@ namespace PlayneraTest.Code.Scripts.Blushers
             }
             finally
             {
-                OnMakeUpAnimationCompleted?.Invoke();
+                if (!token.IsCancellationRequested)
+                {
+                    OnMakeUpCompleted?.Invoke();
+                }
+            }
+            async UniTask Return(CancellationToken tcn)
+            {
+                if(isReturn)
+                    return;
+                
+                isReturn = true;
+                hand.SetOffset(Vector3.zero);
+                await hand.MoveAsync(brushHandleStartPosition, tcn, true);
+
+                rotateParameters.RotateDirection = Vector3.zero;
+                await hand.Rotate(brushHandle, rotateParameters, tcn);
+
+                brushHandle.SetParent(hand.RectTransform.root);
+                await hand.ReturnToStartPosition(tcn);
                 _isMakeupProcessing = false;
             }
-
         }
 
         private async UniTask WaitingMakeUpPosition(CancellationToken token)
@@ -149,15 +157,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
         {
             Debug.Log($"<color=green> MAKE UP!!!! </color>");
 
-            var yoyoPoints = _model.GetYoyoPoints();
+            var yoyoPoints = _model.GetYoyoPoints(GirlFaceMakeupPositions.Cheeks);
             
             await _model.Hand.PlayYoyoAnimationAsync(yoyoPoints, 3, token);
         }
-
-        void IMakeUpViewModel.BreakMakeUp()
-        {
-            Cancel();
-        }
-        
     }
 }

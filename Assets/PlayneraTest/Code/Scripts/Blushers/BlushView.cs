@@ -14,12 +14,14 @@ namespace PlayneraTest.Code.Scripts.Blushers
         [SerializeField] private RoundedImage _border;
         [SerializeField] private Button _makeupButton;
         [SerializeField] private List<RectTransform> _yoyoPoints;
-        private Sprite _faceBrushLeft;
-        private Sprite _faceBrushRight;
+        private Image _faceBrushLeftImage;
+        private Image _faceBrushRightImage;
+        private Sprite _faceBrushLeftSprite;
+        private Sprite _faceBrushRightSprite;
 
-        public Sprite FaceBrushLeft => _faceBrushLeft;
+        public Sprite FaceBrushLeftSprite => _faceBrushLeftSprite;
 
-        public Sprite FaceBrushRight => _faceBrushRight;
+        public Sprite FaceBrushRightSprite => _faceBrushRightSprite;
 
         public List<Vector3> YoyoPoints
         {
@@ -50,8 +52,8 @@ namespace PlayneraTest.Code.Scripts.Blushers
         {
             _brush.color = blush.BlushColor;
             _border.color = blush.BorderColor;
-            _faceBrushLeft = blush.FaceBrushLeft;
-            _faceBrushRight = blush.FaceBrushRight;
+            _faceBrushLeftSprite = blush.FaceBrushLeft;
+            _faceBrushRightSprite = blush.FaceBrushRight;
         }
     }
 }

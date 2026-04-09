@@ -19,7 +19,7 @@ namespace PlayneraTest.Code.Scripts
         public int YoyoCount = 3;
         
         public float MoveTime => _moveTime * _animationSpeedModifier;
-        public float YoyoSpeed => _moveTime * _animationSpeedModifier * _yoyoSpeedModifier;
+        public float YoyoSpeed => _moveTime * _animationSpeedModifier / _yoyoSpeedModifier;
 
         private RotateParameters GetRotateParameters(Vector3 rotateDirection)
         {

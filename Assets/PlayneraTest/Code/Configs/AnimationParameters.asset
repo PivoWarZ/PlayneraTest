@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 649c5f4c6d134009bbb2227c41578e79, type: 3}
   m_Name: AnimationParameters
   m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.AnimationParameters
-  _moveTime: 2
+  _moveTime: 0.5
   _animationSpeedModifier: 1
   _backAnimationSpeedModifier: 0.3
   _yoyoSpeedModifier: 12

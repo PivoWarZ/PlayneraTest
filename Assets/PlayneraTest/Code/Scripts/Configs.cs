@@ -13,6 +13,11 @@ namespace PlayneraTest.Code.Scripts
         private Dictionary<string, ScriptableObject> _settingsByName = new (); 
         private bool _isInitialized;
 
+        private void OnValidate()
+        {
+            Initialize();
+        }
+
         private void Initialize()
         {
             foreach (var setting in _settings)

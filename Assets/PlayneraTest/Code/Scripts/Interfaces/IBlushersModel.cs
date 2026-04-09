@@ -6,7 +6,7 @@ namespace PlayneraTest.Code.Scripts.Interfaces
 {
     public interface IBlushersModel
     {
-        List<Vector3> GetYoyoPoints();
+        List<Vector3> GetYoyoPoints(RectTransform yoyo);
         IHandView Hand { get; }
         int YoyoCount { get; }
 

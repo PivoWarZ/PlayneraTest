@@ -13,6 +13,8 @@ namespace PlayneraTest.Code.Scripts.DI
             
             Container.BindInterfacesAndSelfTo<BlushersViewModel>()
                 .AsCached();
+            
+            Container.BindInterfacesAndSelfTo<BlushersModel>().AsCached();
         }
     }
 }
