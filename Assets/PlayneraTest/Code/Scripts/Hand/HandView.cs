@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using PlayneraTest.Code.Scripts.Interfaces;
 using PlayneraTest.Code.Scripts.MakeupGirl;
+using R3;
 using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Hand
@@ -16,9 +17,8 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnYoYoStarted;
         public event Action OnYoYoEnded;
 		public event Action OnDropped;
-        public float MoveTime { get; set; }
         public RectTransform RectTransform => _rectTransform;
-        
+        public ReactiveProperty<bool> IsBack { get; set; }
         [SerializeField] private GameObject[] _hands;
         [SerializeField] private DragAndDropHandler _dragAndDropHandler;
         private Vector3 _offset;
@@ -31,6 +31,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         private void Awake()
         {
             Clear();
+            IsBack = new ReactiveProperty<bool>();
             _rectTransform = GetComponent<RectTransform>();
             _startPosition = _rectTransform.position;
             _animator = new HandAnimator(transform);
@@ -44,23 +45,14 @@ namespace PlayneraTest.Code.Scripts.Hand
         }
         
 
-        public async UniTask MoveAsync(Vector3 target, CancellationToken token, bool isBack = false)
+        public async UniTask MoveAsync(Vector3 target, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             
             target -= _offset;
 
-            _animator.NewAnimation.AddMoving(target);
-
-            if (isBack)
-            {
-                _animator.IsBackAnimation.Run();
-            }
-            else
-            {
-                _animator.Run();
-            }
-
+            _animator.NewAnimation.AddMoving(target).Run();
+            
             await AwaitingAnimationAsync(token);
         }
 
@@ -99,7 +91,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         public async UniTask ReturnToStartPosition(CancellationToken token)
         {
             Clear();
-            await MoveAsync(_startPosition, token, true);
+            await MoveAsync(_startPosition, token);
             MovingStartPositionComplete();
         }
 

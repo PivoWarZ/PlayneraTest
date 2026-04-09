@@ -25,18 +25,10 @@ namespace PlayneraTest.Code.Scripts.Hand
         public Sequence Sequence => _sequence;
 
         public HandAnimator NewAnimation => CreateAnimation();
-        public HandAnimator IsBackAnimation => SetBackAnimation();
-
-        private HandAnimator SetBackAnimation()
-        {
-            _sequence.PrependCallback(() => _parameters.SetBackAnimationsSpeed());
-            
-            return this;
-        }
 
         private HandAnimator CreateAnimation()
         {
-            _sequence = DOTween.Sequence();
+            _sequence = DOTween.Sequence().Pause();
             _sequence
                 .AppendCallback(() =>
                 {
@@ -48,7 +40,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         public HandAnimator AddMoving(Vector3 target)
         {
             _transform.SetAsLastSibling();
-            var animationTime = _parameters.MoveTime ;
+            var animationTime = _parameters.MoveTime * _parameters.AnimationSpeedModifier;
             
             _sequence
                 .AppendCallback(MoveStarted)
@@ -71,9 +63,9 @@ namespace PlayneraTest.Code.Scripts.Hand
         public HandAnimator AddRotate(RectTransform target, RotateParameters parameters)
         {
             Vector3 rotateDirection = parameters.RotateDirection;
-            float rotateTime = parameters.RotateTime;
+            float rotateTime = parameters.RotateTime * _parameters.AnimationSpeedModifier;
             float scalefactor = parameters.ScaleFactor;
-            float scaleTime = parameters.ScaleTime;
+            float scaleTime = parameters.ScaleTime * _parameters.AnimationSpeedModifier;
 
             _sequence
                 .Append(target.transform.DOScale(scalefactor, scaleTime))
@@ -84,7 +76,7 @@ namespace PlayneraTest.Code.Scripts.Hand
         
         public HandAnimator AddGrab(GameObject[] hands)
         {
-            var animationTime = _parameters.MoveTime;
+            var animationTime = _parameters.MoveTime * _parameters.AnimationSpeedModifier;
             
             _sequence
                 .InsertCallback(animationTime/1.15f, () =>
@@ -118,10 +110,11 @@ namespace PlayneraTest.Code.Scripts.Hand
             _sequence
                 .OnComplete(() =>
                 {
-                    _parameters.RefreshSpeedModifier();
-                    _sequence.Kill();
                     OnAnimationCompleted?.Invoke();
+                    _sequence.Kill();
                 });
+            
+            _sequence.Play();
         }
         
         public HandAnimator AddYoyo(List<Vector3> yoyoPoints, int yoyoCount)
@@ -137,7 +130,6 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public void Clear()
         {
-            _parameters.RefreshSpeedModifier();
             _sequence?.Kill();
         }
 

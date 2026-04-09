@@ -6,6 +6,7 @@ namespace PlayneraTest.Code.Scripts
     [CreateAssetMenu(fileName = "AnimationParameters", menuName = "Configs/Parameters/New AnimationParameters")]
     public class AnimationParameters: ScriptableObject
     {
+        public int YoyoCount = 3;
         [SerializeField] private float _moveTime = 2;
         [SerializeField, Range(0, 1)] private float _animationSpeedModifier = 1;
         [SerializeField, Range(0, 1)] private float _backAnimationSpeedModifier = 0.3f;
@@ -13,13 +14,17 @@ namespace PlayneraTest.Code.Scripts
         
         [Header("Rotate Parameters")]
         [SerializeField] private float _scaleFactor = 1.2f;
-        [SerializeField] private float _scaleTime = 2;
-        [SerializeField] private float _rotateTime = 2;
+        [SerializeField] private float _scaleTime = 0.5f;
+        [SerializeField] private float _rotateTime = 0.5f;
 
-        public int YoyoCount = 3;
-        
-        public float MoveTime => _moveTime * _animationSpeedModifier;
-        public float YoyoSpeed => _moveTime * _animationSpeedModifier / _yoyoSpeedModifier;
+        public float MoveTime => _moveTime;
+
+        public float AnimationSpeedModifier => _animationSpeedModifier;
+
+        public float BackAnimationSpeedModifier => _backAnimationSpeedModifier;
+
+        public float YoyoSpeed => MoveTime / _yoyoSpeedModifier;
+
 
         private RotateParameters GetRotateParameters(Vector3 rotateDirection)
         {
@@ -27,8 +32,8 @@ namespace PlayneraTest.Code.Scripts
             {
                 RotateDirection = rotateDirection,
                 ScaleFactor = _scaleFactor,
-                ScaleTime = _scaleTime * _animationSpeedModifier,
-                RotateTime = _rotateTime * _animationSpeedModifier,
+                ScaleTime = _scaleTime * AnimationSpeedModifier,
+                RotateTime = _rotateTime * AnimationSpeedModifier,
             };
             
             return rotateParameters;
@@ -46,7 +51,7 @@ namespace PlayneraTest.Code.Scripts
 
         public void SetBackAnimationsSpeed()
         {
-            SetSpeedModifier(_backAnimationSpeedModifier);
+            SetSpeedModifier(BackAnimationSpeedModifier);
         }
     }
 }

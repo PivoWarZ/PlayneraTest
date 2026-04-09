@@ -49,8 +49,8 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
         private void Cancel()
         {
-      		_cancell.Cancel();
-        	_cancell.Dispose();
+      		_cancell?.Cancel();
+        	_cancell?.Dispose();
         	_cancell = null;
         }
 
@@ -97,15 +97,18 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 {
                     OnMakeUpCompleted?.Invoke();
                 }
+                
+                hand.IsBack.Value = false;
             }
             async UniTask Return(CancellationToken tcn)
             {
                 if(isReturn)
                     return;
                 
+                hand.IsBack.Value = true;
                 isReturn = true;
                 hand.SetOffset(Vector3.zero);
-                await hand.MoveAsync(brushHandleStartPosition, tcn, true);
+                await hand.MoveAsync(brushHandleStartPosition, tcn);
 
                 rotateParameters.RotateDirection = Vector3.zero;
                 await hand.Rotate(brushHandle, rotateParameters, tcn);
@@ -113,6 +116,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 brushHandle.SetParent(hand.RectTransform.root);
                 await hand.ReturnToStartPosition(tcn);
                 _isMakeupProcessing = false;
+                hand.IsBack.Value = false;
             }
         }
 
