@@ -14,8 +14,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
         [SerializeField] private RoundedImage _border;
         [SerializeField] private Button _makeupButton;
         [SerializeField] private List<RectTransform> _yoyoPoints;
-        private Image _faceBrushLeftImage;
-        private Image _faceBrushRightImage;
         private Sprite _faceBrushLeftSprite;
         private Sprite _faceBrushRightSprite;
 

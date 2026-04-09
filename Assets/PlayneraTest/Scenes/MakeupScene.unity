@@ -5215,6 +5215,8 @@ MonoBehaviour:
   _brushHandle: {fileID: 275013970800745407}
   _brush: {fileID: 1970596173}
   _brushShadow: {fileID: 436421812}
+  _faceBrushLeftImage: {fileID: 537810045}
+  _faceBrushRightImage: {fileID: 1008390401}
 --- !u!114 &8346727027255133306
 MonoBehaviour:
   m_ObjectHideFlags: 0

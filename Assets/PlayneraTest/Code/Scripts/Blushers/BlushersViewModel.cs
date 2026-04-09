@@ -80,9 +80,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 await WaitingMakeUpPosition(token);
                 await MakeUp(token);
                 
+                OnMakeUpCompleted?.Invoke();
                 
                 await Return(token);
-
             }
             catch (OperationCanceledException)
             {
