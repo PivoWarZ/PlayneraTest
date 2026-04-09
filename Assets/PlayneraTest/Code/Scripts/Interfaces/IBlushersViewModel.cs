@@ -2,7 +2,7 @@
 
 namespace PlayneraTest.Code.Scripts.Interfaces
 {
-    public interface IBlushersViewModel: IMakeUpViewModel
+    public interface IBlushersViewModel: IMakeupViewModel
     {
         void SetMakeupTarget(BlushMakeupTargets targets);
     }

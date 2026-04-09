@@ -1,5 +1,6 @@
 ﻿using PlayneraTest.Code.Scripts.Blushers;
 using PlayneraTest.Code.Scripts.Hand;
+using PlayneraTest.Code.Scripts.Pomades;
 using Zenject;
 
 namespace PlayneraTest.Code.Scripts.DI
@@ -16,6 +17,7 @@ namespace PlayneraTest.Code.Scripts.DI
             
             Container.BindInterfacesAndSelfTo<BlushersModel>().AsCached();
             Container.BindInterfacesAndSelfTo<HandSpeedHandler>().AsCached().NonLazy();
+            Container.BindInterfacesAndSelfTo<PomadesViewModel>().AsCached();
         }
     }
 }

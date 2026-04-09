@@ -22,7 +22,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
         public void Construct(IBlushersViewModel viewModel)
         {
             _viewModel = viewModel;
-            _viewModel.OnMakeUpCompleted += ApplyMakeup;
+            _viewModel.OnMakeupCompleted += ApplyMakeup;
         }
 
         private void Start()
@@ -47,7 +47,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 blush.OnMakeupRequest -= StartMakeup;
             }
             
-            _viewModel.OnMakeUpCompleted -= ApplyMakeup;
+            _viewModel.OnMakeupCompleted -= ApplyMakeup;
         }
         
         private void StartMakeup(GameObject obj)

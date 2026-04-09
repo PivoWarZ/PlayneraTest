@@ -9,8 +9,8 @@ namespace PlayneraTest.Code.Scripts.Blushers
 {
     public class BlushersViewModel: IBlushersViewModel, IDisposable
     {
-        public event Action OnMakeUpCompleted;
-        public event Action OnMakeUpCancelled;
+        public event Action OnMakeupCompleted;
+        public event Action OnMakeupCancelled;
         private IBlushersModel _model;
         private BlushMakeupTargets _makeup;
         private bool _isMakeupProcessing;
@@ -26,7 +26,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _makeup = targets;
         }
         
-        void IMakeUpViewModel.StartMakeUp()
+        void IMakeupViewModel.StartMakeUp()
         {
             if (_isMakeupProcessing)
             {
@@ -80,7 +80,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 await WaitingMakeUpPosition(token);
                 await MakeUp(token);
                 
-                OnMakeUpCompleted?.Invoke();
+                OnMakeupCompleted?.Invoke();
                 
                 await Return(token);
             }
@@ -95,7 +95,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             {
                 if (!token.IsCancellationRequested)
                 {
-                    OnMakeUpCompleted?.Invoke();
+                    OnMakeupCompleted?.Invoke();
                 }
                 
                 hand.IsBack.Value = false;
