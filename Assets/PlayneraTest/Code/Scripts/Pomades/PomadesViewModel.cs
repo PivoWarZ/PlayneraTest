@@ -69,7 +69,6 @@ namespace PlayneraTest.Code.Scripts.Pomades
             }
             catch (OperationCanceledException)
             {
-
                 await ReturnToTimeoutTokenAsync();
             }
             finally
@@ -82,7 +81,6 @@ namespace PlayneraTest.Code.Scripts.Pomades
                 _isMakeupProcessing = false;
                 _model.Hand.IsBack.Value = false;
             }
-           
         }
     }
 }

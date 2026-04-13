@@ -11,7 +11,6 @@ namespace PlayneraTest.Code.Scripts.Pomades
         [PreviewField(ObjectFieldAlignment.Center, Height = 50)]
         public Sprite Lipstick;
         [Space]
-        [PreviewField(ObjectFieldAlignment.Center, Height = 50)]
-        public Sprite LipColor;
+        public Color LipColor;
     }
 }

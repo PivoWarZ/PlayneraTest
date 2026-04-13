@@ -11,7 +11,7 @@ namespace PlayneraTest.Code.Scripts.Pomades
         public RectTransform PomadePoint;
         public RectTransform Rect;
         public Image Image;
-        public Sprite LipkColor;
+        public Color LipColor;
         [SerializeField] Button _button;
 
         private void Start()
