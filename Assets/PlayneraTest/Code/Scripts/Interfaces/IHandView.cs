@@ -16,6 +16,8 @@ namespace PlayneraTest.Code.Scripts.Interfaces
         public event Action OnYoYoStarted;
         public event Action OnYoYoEnded;
 		public event Action OnDropped;
+        public event Action OnDragBegin;
+        public event Action OnDragEnded;
         public RectTransform RectTransform { get; }
         public void Clear();
         ReactiveProperty<bool> IsBack { get; set; }

@@ -34,18 +34,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
             _handService.OnServiceInitialized -= TrySetHand;
         }
 
-        public List<Vector3> GetYoyoPoints(RectTransform rect)
-        {
-            var canYoyo = rect.TryGetComponent<IYoyoMakeup>(out var yoyo);
+        public RectTransform MakeupZone => GirlFaceMakeupPositions.Cheeks;
+  
 
-            if (canYoyo)
-            {
-                return yoyo.YoyoPoints;
-            }
-
-            throw new ArgumentNullException();
-        }
-        
         public RotateParameters GetRotateParameters()
         {
             RotateParameters parameters = new RotateParameters
@@ -58,6 +49,8 @@ namespace PlayneraTest.Code.Scripts.Blushers
             
             return parameters;
         }
+
+        public Vector3 DragPosition => GirlFaceMakeupPositions.BottomMakeup.position;
 
         private void TrySetHand()
         {

@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using PlayneraTest.Code.Scripts.Base;
 using PlayneraTest.Code.Scripts.Interfaces;
-using PlayneraTest.Code.Scripts.MakeupGirl;
 using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Blushers
 {
-    public class BlushersViewModel: IBlushersViewModel, IDisposable
+    public class BlushersViewModel: MakeupViewModelBase, IBlushersViewModel, IDisposable
     {
+        public event Action OnMakeup;
         public event Action OnMakeupCompleted;
         public event Action OnMakeupCancelled;
-        private IBlushersModel _model;
         private BlushMakeupTargets _makeup;
-        private bool _isMakeupProcessing;
         private CancellationTokenSource _cancell;
 
         public BlushersViewModel(IBlushersModel model)
@@ -33,9 +32,9 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 Cancel();
                 return;
             }
-
-            _cancell = new CancellationTokenSource();
             
+            _cancell = new CancellationTokenSource();
+            _isReturn = false;
             _isMakeupProcessing = true;
             var token = _cancell.Token;
             
@@ -60,109 +59,49 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brushHandle = _makeup.BrushHandle;
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
-            var brushHandleStartPosition = _makeup.BrushHandle.position;
             var rotateParameters = _model.GetRotateParameters();
             bool isReturn = false;
             
             try
             {
-                await hand.GrabAndRotate(brushHandle, rotateParameters, token);
+                await GrabMakeupAsync(brushHandle, rotateParameters, token);
 
-                brushHandle.SetParent(hand.RectTransform);
-                brushHandle.SetAsLastSibling();
+                SetHandOffset(brush);
 
-                var offset = brush.position - hand.RectTransform.position;
-                hand.SetOffset(offset);
-
-                await hand.MoveAsync(blush.position, token);
-                await hand.PlayYoyoAnimationAsync(_model.GetYoyoPoints(blush), _model.YoyoCount, token);
-                await hand.MoveToBottomMakeupPosition(token);
-                await WaitingMakeUpPosition(token);
-                await MakeUp(token);
+                await MoveAsync(blush, token);
+                await PlayYoyoAnimationAsync(blush, token);
+                await MoveToMakeUpPositionAsync(token);
+                await WaitingMakeUpPositionAsync(brush, token);
+                await MakeUpAsync(token);
                 
-                OnMakeupCompleted?.Invoke();
+                OnMakeup?.Invoke();
                 
-                await Return(token);
+                await ReturnAsync(token);
             }
             catch (OperationCanceledException)
             {
-                using (var timeoutSource = new CancellationTokenSource(TimeSpan.FromSeconds(3)))
+                using (var timeoutSource = new CancellationTokenSource(TimeSpan.FromSeconds(3f)))
                 {
-                    await Return(timeoutSource.Token);
+                    await ReturnAsync(timeoutSource.Token);
                 }
             }
             finally
             {
-                if (!token.IsCancellationRequested)
+                if (token.IsCancellationRequested)
                 {
-                    OnMakeupCompleted?.Invoke();
+                    OnMakeupCancelled?.Invoke();
                 }
                 
-                hand.IsBack.Value = false;
-            }
-            async UniTask Return(CancellationToken tcn)
-            {
-                if(isReturn)
-                    return;
-                
-                hand.IsBack.Value = true;
-                isReturn = true;
-                hand.SetOffset(Vector3.zero);
-                await hand.MoveAsync(brushHandleStartPosition, tcn);
-
-                rotateParameters.RotateDirection = Vector3.zero;
-                await hand.Rotate(brushHandle, rotateParameters, tcn);
-
-                brushHandle.SetParent(hand.RectTransform.root);
-                await hand.ReturnToStartPosition(tcn);
                 _isMakeupProcessing = false;
                 hand.IsBack.Value = false;
             }
         }
 
-        private async UniTask WaitingMakeUpPosition(CancellationToken token)
+        protected override async UniTask RotateAsync(CancellationToken token)
         {
-            bool isMakeUpPosition = false;
-            IHandView hand = _model.Hand;
-            UniTaskCompletionSource<bool> makeupTargetTask;
-
-            while (!isMakeUpPosition)
-            {
-                token.ThrowIfCancellationRequested();
-                
-                 makeupTargetTask = new UniTaskCompletionSource<bool>();
-                
-                void CompleteTask()
-                {
-                    var point = GirlFaceMakeupPositions.Cheeks.InverseTransformPoint(_makeup.Brush.position);
-                    makeupTargetTask.TrySetResult(GirlFaceMakeupPositions.Cheeks.rect.Contains(point));
-                }
-                
-                hand.OnDropped += CompleteTask;
-                
-                isMakeUpPosition = await makeupTargetTask.Task.AttachExternalCancellation(token);
-
-                try
-                {
-                    if (!isMakeUpPosition)
-                    {
-                        await hand.MoveToBottomMakeupPosition(token);
-                    }
-                }
-                finally
-                {
-                    hand.OnDropped -= CompleteTask;
-                }
-            }
-        }
-
-        private async UniTask MakeUp(CancellationToken token)
-        {
-            Debug.Log($"<color=green> MAKE UP!!!! </color>");
-
-            var yoyoPoints = _model.GetYoyoPoints(GirlFaceMakeupPositions.Cheeks);
-            
-            await _model.Hand.PlayYoyoAnimationAsync(yoyoPoints, 3, token);
+            var rotateParameters = _model.GetRotateParameters();
+            rotateParameters.RotateDirection = Vector3.zero;
+            await _model.Hand.Rotate(_makeup.BrushHandle, rotateParameters, token);
         }
     }
 }

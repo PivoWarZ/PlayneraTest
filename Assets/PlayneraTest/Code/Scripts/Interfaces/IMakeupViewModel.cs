@@ -6,6 +6,7 @@ namespace PlayneraTest.Code.Scripts.Interfaces
 {
     public interface IMakeupViewModel
     {
+        public event Action OnMakeup;
         public event Action OnMakeupCompleted;
         public event Action OnMakeupCancelled;
         void StartMakeUp();

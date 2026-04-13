@@ -17,6 +17,8 @@ namespace PlayneraTest.Code.Scripts.Hand
         public event Action OnYoYoStarted;
         public event Action OnYoYoEnded;
 		public event Action OnDropped;
+        public event Action OnDragBegin;
+        public event Action OnDragEnded;
         public RectTransform RectTransform => _rectTransform;
         public ReactiveProperty<bool> IsBack { get; set; }
         [SerializeField] private GameObject[] _hands;
@@ -37,6 +39,25 @@ namespace PlayneraTest.Code.Scripts.Hand
             _animator = new HandAnimator(transform);
             
             _dragAndDropHandler.OnDropped += OnDrop;
+            _dragAndDropHandler.OnDragBegin += DragBegin;
+            _dragAndDropHandler.OnDragEnded += EndDrag;
+        }
+
+        private void EndDrag()
+        {
+            OnDragEnded?.Invoke();
+        }
+
+        private void DragBegin()
+        {
+            OnDragBegin?.Invoke();
+        }
+
+        private void OnDestroy()
+        {
+            _dragAndDropHandler.OnDropped -= OnDrop;
+            _dragAndDropHandler.OnDragBegin -= DragBegin;
+            _dragAndDropHandler.OnDragEnded -= EndDrag;
         }
 
         private void OnDrop()
@@ -85,7 +106,7 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public async UniTask MoveToBottomMakeupPosition(CancellationToken token)
         {
-            await MoveAsync(GirlFaceMakeupPositions.BottomMakeupPosition.position, token);
+            await MoveAsync(GirlFaceMakeupPositions.BottomMakeup.position, token);
         }
 
         public async UniTask ReturnToStartPosition(CancellationToken token)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using PlayneraTest.Code.Scripts.Base;
 using PlayneraTest.Code.Scripts.Hand;
 using PlayneraTest.Code.Scripts.Interfaces;
+using PlayneraTest.Code.Scripts.MakeupGirl;
 using UnityEngine;
 using Zenject;
 
@@ -18,11 +20,10 @@ namespace PlayneraTest.Code.Scripts.Pomades
             _handService = handService;
         }
 
-        List<Vector3> IMakeupModel.GetYoyoPoints(RectTransform yoyo)
-        {
-            throw new System.NotImplementedException();
-        }
+        public RectTransform MakeupZone => GirlFaceMakeupPositions.Lips;
+        public RotateParameters GetRotateParameters() => new RotateParameters();
 
+        public Vector3 DragPosition => GirlFaceMakeupPositions.BottomMakeup.position;
         IHandView IMakeupModel.Hand => _hand;
         int IMakeupModel.YoyoCount => _yoyoCount;
         

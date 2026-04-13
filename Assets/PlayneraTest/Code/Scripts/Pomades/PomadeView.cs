@@ -14,13 +14,11 @@ namespace PlayneraTest.Code.Scripts.Pomades
 
         private void Start()
         {
-            Debug.Log("StartMakeup");
             _button.onClick.AddListener(MakeupRequest);
         }
 
         private void MakeupRequest()
         {
-            Debug.Log("MakeupRequest");
             OnMakeupRequest?.Invoke(gameObject);
         }
 

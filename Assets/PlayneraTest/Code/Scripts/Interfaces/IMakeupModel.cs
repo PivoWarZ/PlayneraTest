@@ -6,7 +6,9 @@ namespace PlayneraTest.Code.Scripts.Interfaces
 {
     public interface IMakeupModel
     {
-        List<Vector3> GetYoyoPoints(RectTransform yoyo);
+        RectTransform MakeupZone { get; }
+        RotateParameters GetRotateParameters();
+        Vector3 DragPosition { get; }
         IHandView Hand { get; }
         int YoyoCount { get; }
     }

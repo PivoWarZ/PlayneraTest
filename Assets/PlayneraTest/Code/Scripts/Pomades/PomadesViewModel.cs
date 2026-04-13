@@ -8,6 +8,7 @@ namespace PlayneraTest.Code.Scripts.Pomades
 {
     public class PomadesViewModel: IPomadesViewModel, IDisposable
     {
+        public event Action OnMakeup;
         public event Action OnMakeupCompleted;
         public event Action OnMakeupCancelled;
         private IPomadesModel _model;

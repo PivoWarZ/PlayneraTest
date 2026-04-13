@@ -13,7 +13,7 @@ namespace PlayneraTest.Code.Scripts.MakeupGirl
         public static RectTransform FaceBrushRight => _girlView.FaceBrushRight;
         public static RectTransform FaceBrushLeft => _girlView.FaceBrushLeft;
         public static RectTransform Ashes => _girlView.Ashes;
-        public static RectTransform BottomMakeupPosition => _girlView.BottomMakeupPosition;
+        public static RectTransform BottomMakeup => _girlView.BottomMakeupPosition;
         public static RectTransform TopMakeupPosition => _girlView.TopMakeupPosition;
 
         public static void Initialize(IGirlView girlView)

@@ -4,6 +4,6 @@ namespace PlayneraTest.Code.Scripts.Interfaces
 {
     public interface IBlushersModel: IMakeupModel
     {
-        RotateParameters GetRotateParameters();
+        
     }
 }
