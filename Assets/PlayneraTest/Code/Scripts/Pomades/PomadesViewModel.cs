@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using PlayneraTest.Code.Scripts.Base;
 using PlayneraTest.Code.Scripts.Interfaces;
-using UnityEngine;
 
 namespace PlayneraTest.Code.Scripts.Pomades
 {
-    public class PomadesViewModel: IPomadesViewModel, IDisposable
+    public class PomadesViewModel: MakeupViewModelBase, IPomadesViewModel, IDisposable
     {
         public event Action OnMakeup;
         public event Action OnMakeupCompleted;
         public event Action OnMakeupCancelled;
-        private IPomadesModel _model;
         private PomadeView _pomade;
-        private bool _isMakeupProcessing;
         private CancellationTokenSource _cancell;
 
         public PomadesViewModel(IPomadesModel model)
@@ -35,6 +33,7 @@ namespace PlayneraTest.Code.Scripts.Pomades
             
             _cancell = new CancellationTokenSource();
             _isMakeupProcessing = true;
+            _isReturn = false;
             
             ((IMakeupViewModel)this).RunMakeupAsync(_cancell.Token).Forget();
             
@@ -53,13 +52,37 @@ namespace PlayneraTest.Code.Scripts.Pomades
         }
 
         async UniTask IMakeupViewModel.RunMakeupAsync(CancellationToken token)
-        { 
-            IHandView hand = _model.Hand;
-           var targetPoint = _pomade.transform.position;
+        {
+            try
+            {
+                await GrabMakeupAsync(_pomade.Rect, _model.GetRotateParameters, token);
+                
+                SetHandOffset(_pomade.Rect);
+
+                await MoveAsync(_model.DragPosition, token);
+                await WaitingMakeUpPositionAsync(_model.MakeupZone, token);
+                await MakeUpAsync(token);
+
+                OnMakeupCompleted?.Invoke();
+
+                await ReturnAsync(token);
+            }
+            catch (OperationCanceledException)
+            {
+
+                await ReturnToTimeoutTokenAsync();
+            }
+            finally
+            {
+                if (token.IsCancellationRequested)
+                {
+                    OnMakeupCancelled?.Invoke();
+                }
+                
+                _isMakeupProcessing = false;
+                _model.Hand.IsBack.Value = false;
+            }
            
-           await hand.Grab(targetPoint, token);
-           _pomade.transform.SetParent(hand.RectTransform);
-           _pomade.transform.SetAsLastSibling();
         }
     }
 }

@@ -60,7 +60,7 @@ namespace PlayneraTest.Code.Scripts.Hand
                 .OnComplete(MovingCompleted);
         }
         
-        public HandAnimator AddRotate(RectTransform target, RotateParameters parameters)
+        public HandAnimator AddScaleAndRotate(RectTransform target, RotateParameters parameters)
         {
             Vector3 rotateDirection = parameters.RotateDirection;
             float rotateTime = parameters.RotateTime * _parameters.AnimationSpeedModifier;

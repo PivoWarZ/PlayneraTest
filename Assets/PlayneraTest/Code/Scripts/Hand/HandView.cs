@@ -131,7 +131,7 @@ namespace PlayneraTest.Code.Scripts.Hand
 
         public async UniTask Rotate(RectTransform target, RotateParameters parameters, CancellationToken token)
         {
-            _animator.NewAnimation.AddRotate(target, parameters).Run();
+            _animator.NewAnimation.AddScaleAndRotate(target, parameters).Run();
             
             await AwaitingAnimationAsync(token);
         }

@@ -59,7 +59,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             var brushHandle = _makeup.BrushHandle;
             var brush = _makeup.Brush;
             var blush = _makeup.Blush;
-            var rotateParameters = _model.GetRotateParameters();
+            var rotateParameters = _model.GetRotateParameters;
             bool isReturn = false;
             
             try
@@ -68,7 +68,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
 
                 SetHandOffset(brush);
 
-                await MoveAsync(blush, token);
+                await MoveAsync(blush.position, token);
                 await PlayYoyoAnimationAsync(blush, token);
                 await MoveToMakeUpPositionAsync(token);
                 await WaitingMakeUpPositionAsync(brush, token);
@@ -80,10 +80,7 @@ namespace PlayneraTest.Code.Scripts.Blushers
             }
             catch (OperationCanceledException)
             {
-                using (var timeoutSource = new CancellationTokenSource(TimeSpan.FromSeconds(3f)))
-                {
-                    await ReturnAsync(timeoutSource.Token);
-                }
+                await ReturnToTimeoutTokenAsync();
             }
             finally
             {
@@ -95,13 +92,6 @@ namespace PlayneraTest.Code.Scripts.Blushers
                 _isMakeupProcessing = false;
                 hand.IsBack.Value = false;
             }
-        }
-
-        protected override async UniTask RotateAsync(CancellationToken token)
-        {
-            var rotateParameters = _model.GetRotateParameters();
-            rotateParameters.RotateDirection = Vector3.zero;
-            await _model.Hand.Rotate(_makeup.BrushHandle, rotateParameters, token);
         }
     }
 }

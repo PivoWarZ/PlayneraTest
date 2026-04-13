@@ -21,7 +21,15 @@ namespace PlayneraTest.Code.Scripts.Pomades
         }
 
         public RectTransform MakeupZone => GirlFaceMakeupPositions.Lips;
-        public RotateParameters GetRotateParameters() => new RotateParameters();
+
+        public RotateParameters GetRotateParameters
+        {
+            get
+            {
+                var config = Configs.Instance.Get<AnimationParameters>();
+                return config.GetRotateParameters(Vector3.zero);
+            }
+        }
 
         public Vector3 DragPosition => GirlFaceMakeupPositions.BottomMakeup.position;
         IHandView IMakeupModel.Hand => _hand;

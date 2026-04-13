@@ -26,7 +26,7 @@ namespace PlayneraTest.Code.Scripts
         public float YoyoSpeed => MoveTime * _yoyoSpeedModifier;
 
 
-        private RotateParameters GetRotateParameters(Vector3 rotateDirection)
+        public RotateParameters GetRotateParameters(Vector3 rotateDirection)
         {
             RotateParameters rotateParameters = new RotateParameters
             {

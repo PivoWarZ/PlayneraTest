@@ -37,17 +37,13 @@ namespace PlayneraTest.Code.Scripts.Blushers
         public RectTransform MakeupZone => GirlFaceMakeupPositions.Cheeks;
   
 
-        public RotateParameters GetRotateParameters()
+        public RotateParameters GetRotateParameters
         {
-            RotateParameters parameters = new RotateParameters
+            get
             {
-                RotateDirection = new Vector3(0, 0, -90),
-                RotateTime = 0.2f,
-                ScaleTime = 0.2f,
-                ScaleFactor = 1.15f,
-            };
-            
-            return parameters;
+                var config = Configs.Instance.Get<AnimationParameters>();
+                return config.GetRotateParameters(new Vector3(0f, 0f, -90f));
+            }
         }
 
         public Vector3 DragPosition => GirlFaceMakeupPositions.BottomMakeup.position;

@@ -18,5 +18,5 @@ MonoBehaviour:
   _backAnimationSpeedModifier: 0.3
   _yoyoSpeedModifier: 0.1
   _scaleFactor: 1.2
-  _scaleTime: 2
-  _rotateTime: 2
+  _scaleTime: 0.2
+  _rotateTime: 0.2

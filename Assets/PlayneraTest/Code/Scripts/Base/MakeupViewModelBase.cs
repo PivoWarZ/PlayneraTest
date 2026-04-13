@@ -25,9 +25,9 @@ namespace PlayneraTest.Code.Scripts.Base
             await _model.Hand.PlayYoyoAnimationAsync(GetYoyoPoints(rect), _model.YoyoCount, token);
         }
 
-        protected async UniTask MoveAsync(RectTransform rect, CancellationToken token)
+        protected async UniTask MoveAsync(Vector3 position, CancellationToken token)
         {
-            await _model.Hand.MoveAsync(rect.position, token);
+            await _model.Hand.MoveAsync(position, token);
         }
 
         protected void SetHandOffset(RectTransform rect)
@@ -126,13 +126,23 @@ namespace PlayneraTest.Code.Scripts.Base
             _model.Hand.SetOffset(Vector3.zero);
             await _model.Hand.MoveAsync(_item.StartPosition, token);
             
-            await RotateAsync(token);
+            var rotateParameters = _model.GetRotateParameters;
+            rotateParameters.RotateDirection = Vector3.zero;
+            rotateParameters.ScaleFactor = 1f;
+            await _model.Hand.Rotate(_item.Item, rotateParameters, token);
 
             _item.Item.SetParent(_item.Parent);
+            _item.Item.SetAsLastSibling();
             await _model.Hand.ReturnToStartPosition(token);
             _model.Hand.IsBack.Value = false;
         }
-        
-        protected virtual async UniTask RotateAsync(CancellationToken token) {  }
+
+        protected async UniTask ReturnToTimeoutTokenAsync(float tokenLifeTime = 3f)
+        {
+            using (var timeoutSource = new CancellationTokenSource(TimeSpan.FromSeconds(tokenLifeTime)))
+            {
+                await ReturnAsync(timeoutSource.Token);
+            }
+        }
     }
 }

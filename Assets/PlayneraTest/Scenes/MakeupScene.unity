@@ -270,8 +270,8 @@ RectTransform:
   m_Children:
   - {fileID: 922305807}
   - {fileID: 1527308302}
-  - {fileID: 1625484039}
   - {fileID: 1417701322}
+  - {fileID: 1625484039}
   - {fileID: 1671734976}
   - {fileID: 1196290930}
   - {fileID: 478033295}
@@ -358,12 +358,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadesView
   _pomades:
-  - {fileID: 1171144026}
-  - {fileID: 307733179}
-  - {fileID: 1272580036}
-  - {fileID: 712146006}
-  - {fileID: 1968970525}
-  - {fileID: 164596660}
+  - {fileID: 7523046789781573311}
+  - {fileID: 1761773734}
+  - {fileID: 163319550}
+  - {fileID: 308238237}
+  - {fileID: 2093979533}
+  - {fileID: 1496792366}
 --- !u!1001 &163319549
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -461,10 +461,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
---- !u!114 &164596660 stripped
+--- !u!114 &163319550 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2621560685802904680, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
-  m_PrefabInstance: {fileID: 1496792365}
+  m_CorrespondingSourceObject: {fileID: 5314898887576810832, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+  m_PrefabInstance: {fileID: 163319549}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -472,6 +472,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
+--- !u!1 &175902774
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 175902775}
+  m_Layer: 5
+  m_Name: yoyopoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &175902775
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 175902774}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1695663947}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -50, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &221030786
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -569,17 +604,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 702c0325f12f0be4c8b0d56c63716e26, type: 3}
---- !u!114 &307733179 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2621560685802904680, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
-  m_PrefabInstance: {fileID: 163319549}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!1001 &308238236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -677,6 +701,52 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+--- !u!114 &308238237 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5314898887576810832, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+  m_PrefabInstance: {fileID: 308238236}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
+--- !u!1 &318801174
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 318801175}
+  m_Layer: 5
+  m_Name: yoypoint2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &318801175
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318801174}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1695663947}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 50, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &352896851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1294,17 +1364,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c844db4371db2949ae0cfd4523250e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Blushers.BlushView
---- !u!114 &712146006 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2621560685802904680, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
-  m_PrefabInstance: {fileID: 308238236}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!1 &730163176
 GameObject:
   m_ObjectHideFlags: 0
@@ -1662,60 +1721,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b02d0f07b823f1d4f9ab5974d2935328, type: 3}
---- !u!21 &1117867024
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/RoundedCorners
-  m_Shader: {fileID: 4800000, guid: d488a0f3cbf265740829c83142bb3ba9, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MaskTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors: []
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
---- !u!114 &1171144026 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2621560685802904680, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
-  m_PrefabInstance: {fileID: 7523046789781573310}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!1 &1189046829
 GameObject:
   m_ObjectHideFlags: 0
@@ -1796,17 +1801,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7726660133543368851, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
   m_PrefabInstance: {fileID: 2093979532}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1272580036 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2621560685802904680, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
-  m_PrefabInstance: {fileID: 1761773733}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!224 &1417701322 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7726660133543368851, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
@@ -2118,6 +2112,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+--- !u!114 &1496792366 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5314898887576810832, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+  m_PrefabInstance: {fileID: 1496792365}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!1001 &1497837560
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2288,6 +2293,7 @@ GameObject:
   - component: {fileID: 1695663947}
   - component: {fileID: 1695663949}
   - component: {fileID: 1695663948}
+  - component: {fileID: 1695663950}
   m_Layer: 5
   m_Name: Lips
   m_TagString: Untagged
@@ -2306,7 +2312,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 175902775}
+  - {fileID: 318801175}
   m_Father: {fileID: 1487030216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.38500002, y: 0.102000006}
@@ -2352,6 +2360,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695663946}
   m_CullTransparentMesh: 1
+--- !u!114 &1695663950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695663946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b30e54123cf455888f84843ff4fc0e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.MakeUpZone
+  _yoyoPoints:
+  - {fileID: 175902775}
+  - {fileID: 318801175}
 --- !u!1 &1701633971
 GameObject:
   m_ObjectHideFlags: 0
@@ -2620,6 +2643,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+--- !u!114 &1761773734 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5314898887576810832, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+  m_PrefabInstance: {fileID: 1761773733}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!1 &1805841212
 GameObject:
   m_ObjectHideFlags: 0
@@ -2980,17 +3014,6 @@ RectTransform:
   m_AnchoredPosition: {x: -0.6000061, y: 3.1999512}
   m_SizeDelta: {x: 0, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1968970525 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2621560685802904680, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
-  m_PrefabInstance: {fileID: 2093979532}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!1 &1970596172
 GameObject:
   m_ObjectHideFlags: 0
@@ -3158,6 +3181,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+--- !u!114 &2093979533 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5314898887576810832, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+  m_PrefabInstance: {fileID: 2093979532}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!224 &275013970800745407
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4359,10 +4393,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7903518710238740354, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 1117867024}
     - target: {fileID: 8994000421787111079, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
       propertyPath: m_Name
       value: 1
@@ -4372,6 +4402,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+--- !u!114 &7523046789781573311 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5314898887576810832, guid: 2c800a355a8633f498a7b0ff21771f48, type: 3}
+  m_PrefabInstance: {fileID: 7523046789781573310}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a94928f8f24e428a84e2ded506b1c564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayneraTest.Code.Scripts.Pomades.PomadeView
 --- !u!224 &7795440888158033897
 RectTransform:
   m_ObjectHideFlags: 0

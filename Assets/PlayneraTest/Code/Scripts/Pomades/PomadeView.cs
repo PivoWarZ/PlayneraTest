@@ -8,6 +8,8 @@ namespace PlayneraTest.Code.Scripts.Pomades
     public class PomadeView: MonoBehaviour, IMakeupRequester
     {
         public event Action<GameObject> OnMakeupRequest;
+        public RectTransform PomadePoint;
+        public RectTransform Rect;
         public Image Image;
         public Sprite LipkColor;
         [SerializeField] Button _button;
